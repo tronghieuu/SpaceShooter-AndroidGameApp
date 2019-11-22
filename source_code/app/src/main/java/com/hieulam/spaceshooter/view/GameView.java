@@ -73,6 +73,22 @@ public class GameView extends SurfaceView implements Runnable {
             background2.y = - screenY;
         }
 
+        for(Rock rock : rocks) {
+            for(Bullet bullet : bullets) {
+                if(rock.isVisible()) {
+                    if(bullet.isVisible()) {
+                        if(bullet.getCollisionShape().intersect(rock.getCollisionShape())) {
+                            bullet.x = - 500;
+                            rock.x = - 500;
+                        }
+                    }
+                    if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
+                        spaceShip.x = - 500;
+                    }
+                }
+            }
+        }
+
         shootingTime++;
         if(shootingTime > 10) {
             shootingTime = 0;

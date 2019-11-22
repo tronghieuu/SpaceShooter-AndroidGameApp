@@ -26,8 +26,8 @@ public class Bullet {
 
         bullet = Bitmap.createScaledBitmap(bullet, width, height, false);
 
-        x = - 100;
-        y = - 100;
+        x = - 500;
+        y = - 500;
     }
 
     Bitmap getBullet() {
