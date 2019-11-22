@@ -41,8 +41,8 @@ public class SpaceShip {
         spaceShip7 = Bitmap.createScaledBitmap(spaceShip7, width, height, false);
         spaceShip8 = Bitmap.createScaledBitmap(spaceShip8, width, height, false);
 
-        x = screenX / 2;
-        y = 100 * screenRatioY;
+        x = screenX / 2 - width / 2;
+        y = 2000 * screenRatioY;
     }
 
     Bitmap getSpaceShip() {
