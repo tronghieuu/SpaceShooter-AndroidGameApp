@@ -90,7 +90,7 @@ public class GameView extends SurfaceView implements Runnable {
             rockDropTime = 0;
             for(Rock rock : rocks) {
                 if(!rock.isVisible()) {
-                    rock.x =  new Random().nextFloat() + (screenX - rock.width);
+                    rock.x = (int)(Math.random()*(screenX - rock.width)+1);
                     rock.y = - rock.height + 1;
                     return;
                 }
