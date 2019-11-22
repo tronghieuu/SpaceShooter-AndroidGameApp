@@ -6,8 +6,14 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class GameView extends SurfaceView implements Runnable {
 
+    private List<Rock> rocks;
+    private List<Bullet> bullets;
     private Thread thread;
     private boolean isPlaying;
     private int screenX, screenY;
@@ -16,6 +22,7 @@ public class GameView extends SurfaceView implements Runnable {
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY;
     private Paint paint;
     private Background background1, background2;
+    private float shootingTime = 0, rockDropTime = 0;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -29,6 +36,16 @@ public class GameView extends SurfaceView implements Runnable {
         background2 = new Background(screenX, screenY, getResources());
 
         spaceShip = new SpaceShip(screenX, screenY, getResources());
+
+        bullets = new ArrayList<>();
+        for(int i = 0; i < 20; i++) {
+            bullets.add(new Bullet(getResources()));
+        }
+
+        rocks = new ArrayList<>();
+        for(int i = 0; i < 20; i++) {
+            rocks.add(new Rock(getResources()));
+        }
 
         background2.y = - screenY;
 
@@ -55,6 +72,30 @@ public class GameView extends SurfaceView implements Runnable {
         if(background2.y - background2.background.getHeight() > 0) {
             background2.y = - screenY;
         }
+
+        shootingTime++;
+        if(shootingTime > 10) {
+            shootingTime = 0;
+            for(Bullet bullet : bullets) {
+                if(!bullet.isVisible()) {
+                    bullet.x = spaceShip.x + (float) spaceShip.width / 2;
+                    bullet.y = spaceShip.y;
+                    return;
+                }
+            }
+        }
+
+        rockDropTime++;
+        if(rockDropTime > 15) {
+            rockDropTime = 0;
+            for(Rock rock : rocks) {
+                if(!rock.isVisible()) {
+                    rock.x =  new Random().nextFloat() + (screenX - rock.width);
+                    rock.y = - rock.height + 1;
+                    return;
+                }
+            }
+        }
     }
 
     private void draw() {
@@ -66,6 +107,19 @@ public class GameView extends SurfaceView implements Runnable {
 
             canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, paint);
 
+            for(Bullet bullet : bullets) {
+                if(bullet.isVisible()) {
+                    bullet.y = bullet.y - 30 * screenRatioY;
+                    canvas.drawBitmap(bullet.getBullet(), bullet.x, bullet.y, paint);
+                }
+            }
+
+            for (Rock rock : rocks) {
+                if(rock.isVisible()) {
+                    rock.y = rock.y + 20 * screenRatioY;
+                    canvas.drawBitmap(rock.getRock(), rock.x, rock.y, paint);
+                }
+            }
             getHolder().unlockCanvasAndPost(canvas);
         }
     }
@@ -108,7 +162,7 @@ public class GameView extends SurfaceView implements Runnable {
                     float distanceY = currentTouchY - previousTouchY;
                     spaceShip.x += distanceX;
                     spaceShip.y += distanceY;
-                    if(spaceShip.x < 0 || spaceShip.x > screenX - spaceShip.width) {
+                    if(spaceShip.x < - (float) (spaceShip.width / 2) || spaceShip.x > screenX - (float) (spaceShip.width / 2)) {
                         spaceShip.x -= distanceX;
                     }
                     if(spaceShip.y < 0 || spaceShip.y > screenY - spaceShip.height) {
