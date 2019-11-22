@@ -22,8 +22,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         this.screenX = screenX;
         this.screenY = screenY;
-        screenRatioX = 1440f / screenX;
-        screenRatioY = 3120f / screenY;
+        screenRatioX = screenX / 1440f;
+        screenRatioY = screenY / 3120f;
 
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
