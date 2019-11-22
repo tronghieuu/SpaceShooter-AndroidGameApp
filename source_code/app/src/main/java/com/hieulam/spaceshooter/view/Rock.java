@@ -15,8 +15,8 @@ import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
 public class Rock {
 
     int width, height, rockFrame = 0;
-    float x, y, min = 0.5f, max = 1;
-    Bitmap rock1, rock2, rock3, rock4, rock5, rock6, rock7, rock8;
+    float x, y, min = 0.7f, max = 1.3f;
+    Bitmap rock1, rock2, rock3, rock4, rock5, rock6, rock7, rock8, currentRock;
 
     Rock(Resources res) {
         rock1 = BitmapFactory.decodeResource(res, R.drawable.rock1);
@@ -53,30 +53,41 @@ public class Rock {
         switch (rockFrame) {
             case 0:
                 rockFrame++;
+                currentRock = rock1;
                 return rock1;
-            case 1:
+            case 15:
                 rockFrame++;
+                currentRock = rock2;
                 return rock2;
-            case 2:
+            case 30:
                 rockFrame++;
+                currentRock = rock3;
                 return rock3;
-            case 3:
+            case 45:
                 rockFrame++;
+                currentRock = rock4;
                 return rock4;
-            case 4:
+            case 60:
                 rockFrame++;
+                currentRock = rock5;
                 return rock5;
-            case 5:
+            case 75:
                 rockFrame++;
+                currentRock = rock6;
                 return rock6;
-            case 6:
+            case 90:
                 rockFrame++;
+                currentRock = rock7;
                 return rock7;
-            case 7:
+            case 105:
                 rockFrame = 0;
+                currentRock = rock8;
                 return rock8;
+            default:
+                break;
         }
-        return rock1;
+        rockFrame++;
+        return currentRock;
     }
 
     Rect getCollisionShape() {
