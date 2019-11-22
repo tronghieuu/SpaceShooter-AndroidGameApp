@@ -45,8 +45,8 @@ public class Rock {
         rock7 = Bitmap.createScaledBitmap(rock7, width, height, false);
         rock8 = Bitmap.createScaledBitmap(rock8, width, height, false);
 
-        x = - 100;
-        y = - 100;
+        x = - 500;
+        y = - 500;
     }
 
     Bitmap getRock() {
