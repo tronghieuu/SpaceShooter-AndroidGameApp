@@ -29,7 +29,7 @@ public class SpaceShip {
         width = spaceShip1.getWidth();
         height = spaceShip1.getHeight();
 
-        width = (int) (width * screenRatioX);
+        width = (int) (width * screenRatioY);
         height = (int) (height * screenRatioY);
 
         spaceShip1 = Bitmap.createScaledBitmap(spaceShip1, width, height, false);
