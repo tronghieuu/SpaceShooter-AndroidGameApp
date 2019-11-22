@@ -11,6 +11,7 @@ import com.hieulam.spaceshooter.view.GameView;
 public class GamePlayActivity extends AppCompatActivity {
 
     private GameView mGameView;
+    public static Point point;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,7 @@ public class GamePlayActivity extends AppCompatActivity {
     private void init(){
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Point point = new Point();
+        point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
 
         mGameView = new GameView(this, point.x, point.y);
