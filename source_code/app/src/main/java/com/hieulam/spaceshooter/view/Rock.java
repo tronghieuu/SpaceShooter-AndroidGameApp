@@ -40,7 +40,7 @@ public class Rock {
 
     Bitmap getRock() {
         rockAngle++;
-        if(rockAngle == 180){
+        if(rockAngle == 360){
             rockAngle = 0;
         }
         Bitmap rotateRock = Bitmap.createBitmap(width,
