@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // Apply activity transition
+            startActivity(new Intent(this, MainMenuActivity.class));
+            finish();
         } else {
             // Swap without transition
             startActivity(new Intent(this, MainMenuActivity.class));

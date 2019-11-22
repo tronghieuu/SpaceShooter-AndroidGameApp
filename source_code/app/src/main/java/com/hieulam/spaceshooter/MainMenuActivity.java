@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button mBtnPlay;
+    private TextView mTvPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,20 +17,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_main_menu);
 
         init();
+        addListener();
     }
 
     private void init(){
-        mBtnPlay = findViewById(R.id.btnPlay);
+        mTvPlay = findViewById(R.id.tvPlay);
     }
 
     private  void addListener(){
-        mBtnPlay.setOnClickListener(this);
+        mTvPlay.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btnPlay:
+            case R.id.tvPlay:
                 startActivity(new Intent(this, GamePlayActivity.class));
                 break;
         }

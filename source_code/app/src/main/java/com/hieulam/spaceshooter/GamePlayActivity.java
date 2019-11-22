@@ -2,37 +2,43 @@ package com.hieulam.spaceshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 
-public class GamePlayActivity extends AppCompatActivity implements View.OnClickListener {
+import com.hieulam.spaceshooter.view.GameView;
 
-    private Button mBtnBack;
+public class GamePlayActivity extends AppCompatActivity {
+
+    private GameView mGameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_play);
 
         init();
-        addListener();
     }
 
     private void init(){
-        mBtnBack = findViewById(R.id.btnBack);
-    }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-    private void addListener(){
-        mBtnBack.setOnClickListener(this);
+        Point point = new Point();
+        getWindowManager().getDefaultDisplay().getSize(point);
+
+        mGameView = new GameView(this, point.x, point.y);
+
+        setContentView(mGameView);
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnBack:
-                finish();
-        }
+    protected void onPause() {
+        super.onPause();
+        mGameView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGameView.resume();
     }
 }
