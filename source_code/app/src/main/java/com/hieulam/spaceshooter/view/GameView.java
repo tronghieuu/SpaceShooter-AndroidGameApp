@@ -3,7 +3,7 @@ package com.hieulam.spaceshooter.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -11,7 +11,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread thread;
     private boolean isPlaying;
     private int screenX, screenY;
-    private float screenRatioX, screenRatioY;
+    private SpaceShip spaceShip;
+    public static float screenRatioX, screenRatioY;
+    private float currentTouchX, currentTouchY, previousTouchX, previousTouchY;
     private Paint paint;
     private Background background1, background2;
 
@@ -25,6 +27,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
+
+        spaceShip = new SpaceShip(screenX, screenY, getResources());
 
         background2.y = - screenY;
 
@@ -51,9 +55,6 @@ public class GameView extends SurfaceView implements Runnable {
         if(background2.y - background2.background.getHeight() > 0) {
             background2.y = - screenY;
         }
-
-        Log.i("test1", background1.y +"");
-        Log.i("test2", background2.y +"");
     }
 
     private void draw() {
@@ -62,6 +63,8 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = getHolder().lockCanvas();
             canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
             canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
+
+            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, paint);
 
             getHolder().unlockCanvasAndPost(canvas);
         }
@@ -88,5 +91,26 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        currentTouchX = event.getX();
+        currentTouchY = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                previousTouchX = event.getX();
+                previousTouchY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if(spaceShip.getCollisionShape().contains((int) currentTouchX, (int) currentTouchY)) {
+                    spaceShip.x += currentTouchX - previousTouchX;
+                    spaceShip.y += currentTouchY - previousTouchY;
+                }
+                previousTouchX = currentTouchX;
+                previousTouchY = currentTouchY;
+                break;
+        }
+        return true;
     }
 }
