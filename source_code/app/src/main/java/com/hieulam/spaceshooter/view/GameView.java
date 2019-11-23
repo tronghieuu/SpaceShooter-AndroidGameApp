@@ -2,23 +2,16 @@ package com.hieulam.spaceshooter.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.net.Uri;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import com.hieulam.spaceshooter.GameOverActivity;
 import com.hieulam.spaceshooter.GamePlayActivity;
-import com.hieulam.spaceshooter.MainMenuActivity;
-import com.hieulam.spaceshooter.R;
+import com.hieulam.spaceshooter.MainActivity;
+import com.hieulam.spaceshooter.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
     private GamePlayActivity activity;
-    private SoundManager soundList;
+
     private List<Heart> hearts;
 
     public GameView(GamePlayActivity activity, int screenX, int screenY) {
@@ -79,8 +72,7 @@ public class GameView extends SurfaceView implements Runnable {
         paintScore.setTextSize(100 * screenRatioY);
 
         // SOUND
-        soundList = new SoundManager();
-        soundList.InitSound(this.getContext());
+
 
         // HEART CONTAINER
         hearts = new ArrayList<>();
@@ -121,18 +113,18 @@ public class GameView extends SurfaceView implements Runnable {
                             rock.x = - 500;
                             score += 10;
 
-                            soundList.playSound(1);
+                            MainActivity.soundList.playSound(1);
                         }
                     }
 
                     if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
-                        soundList.playSound(2);
+                        MainActivity.soundList.playSound(2);
                         if(heartNumber == 1) {
                             Intent intent = new Intent(activity, GameOverActivity.class);
                             intent.putExtra("high_score", score+"");
                             activity.startActivity(intent);
                             activity.finish();
-                            //soundList.cleanUpIfEnd();
+                            MainActivity.soundList.stopMusic(4);
                         }
                         heartNumber--;
                         hearts.get(2 - heartNumber).isLive = false;
