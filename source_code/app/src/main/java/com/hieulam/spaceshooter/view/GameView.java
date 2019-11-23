@@ -2,8 +2,10 @@ package com.hieulam.spaceshooter.view;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -22,7 +24,7 @@ public class GameView extends SurfaceView implements Runnable {
     private int screenX, screenY, score = 0;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
-    private float currentTouchX, currentTouchY, previousTouchX, previousTouchY;
+    private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove;
     private Paint paint;
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
@@ -38,6 +40,8 @@ public class GameView extends SurfaceView implements Runnable {
         this.screenY = screenY;
         screenRatioX = screenX / 1440f;
         screenRatioY = screenY / 3120f;
+
+        backgroundMove = 10 * screenRatioY;
 
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
@@ -69,8 +73,9 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        background1.y += 10 * screenRatioY;
-        background2.y += 10 * screenRatioY;
+
+        background1.y += backgroundMove;
+        background2.y += backgroundMove;
 
         if(background1.y - background1.background.getHeight() > 0) {
             background1.y = - screenY;
@@ -79,6 +84,9 @@ public class GameView extends SurfaceView implements Runnable {
         if(background2.y - background2.background.getHeight() > 0) {
             background2.y = - screenY;
         }
+
+        Log.i("b1", background1.y+"");
+        Log.i("b2", background2.y+"");
 
         // CHECK IMPACT BETWEEN ROCK, BULLET AND SPACESHIP
         for(Rock rock : rocks) {
@@ -132,11 +140,11 @@ public class GameView extends SurfaceView implements Runnable {
 
             Canvas canvas = getHolder().lockCanvas();
 
-            canvas.drawColor( 0, PorterDuff.Mode.CLEAR);
+            canvas.drawColor(Color.parseColor("#19183e"));
       
-            canvas.drawBitmap(background1.background, background1.x, background1.y, null);
-            canvas.drawBitmap(background2.background, background2.x, background2.y, null);
-            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, null);
+            canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
+            canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
+            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, paint);
 
             for(Bullet bullet : bullets) {
                 if(bullet.isVisible()) {
