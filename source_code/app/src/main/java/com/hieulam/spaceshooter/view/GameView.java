@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
+import com.hieulam.spaceshooter.GameOverActivity;
 import com.hieulam.spaceshooter.GamePlayActivity;
 import com.hieulam.spaceshooter.MainMenuActivity;
 
@@ -106,7 +107,9 @@ public class GameView extends SurfaceView implements Runnable {
                     }
 
                     if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
-                        activity.startActivity(new Intent(activity, MainMenuActivity.class));
+                        Intent intent = new Intent(activity, GameOverActivity.class);
+                        intent.putExtra("high_score", score+"");
+                        activity.startActivity(intent);
                         activity.finish();
                     }
                 }
