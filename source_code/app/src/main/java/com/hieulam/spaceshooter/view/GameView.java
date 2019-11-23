@@ -1,6 +1,8 @@
 package com.hieulam.spaceshooter.view;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +14,7 @@ import android.view.SurfaceView;
 import com.hieulam.spaceshooter.GameOverActivity;
 import com.hieulam.spaceshooter.GamePlayActivity;
 import com.hieulam.spaceshooter.MainMenuActivity;
+import com.hieulam.spaceshooter.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ public class GameView extends SurfaceView implements Runnable {
     private List<Bullet> bullets;
     private Thread thread;
     private boolean isPlaying;
-    private int screenX, screenY, score = 0;
+    private int screenX, screenY, score = 0, heartNumber = 3;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
@@ -30,43 +33,51 @@ public class GameView extends SurfaceView implements Runnable {
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
     private GamePlayActivity activity;
+    private List<Heart> hearts;
 
     public GameView(GamePlayActivity activity, int screenX, int screenY) {
         super(activity);
 
         this.activity = activity;
 
-
         this.screenX = screenX;
         this.screenY = screenY;
         screenRatioX = screenX / 1440f;
         screenRatioY = screenY / 3120f;
 
+        // BACKGROUND MOVING
         backgroundMove = 10 * screenRatioY;
-
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
+        background2.y = - screenY;
 
+        // SPACESHIP
         spaceShip = new SpaceShip(screenX, screenY, getResources());
 
+        // BULLET FOR SHOOTING
         bullets = new ArrayList<>();
         for(int i = 0; i < 20; i++) {
             bullets.add(new Bullet(getResources()));
         }
 
+        // ROCK FOR HINDRANCE
         rocks = new ArrayList<>();
         for(int i = 0; i < 20; i++) {
             rocks.add(new Rock(getResources()));
         }
 
-        background2.y = - screenY;
-
+        // CONFIGURE PAIN FOR SCORE TEXT
         scoreX = 0 * screenRatioX;
         scoreY = 100 * screenRatioY;
-
         paintScore = new Paint();
         paintScore.setColor(Color.WHITE);
         paintScore.setTextSize(100 * screenRatioY);
+
+        // HEART CONTAINER
+        hearts = new ArrayList<>();
+        hearts.add(new Heart(screenX, screenY, getResources()));
+        hearts.add(new Heart(screenX, screenY, getResources()));
+        hearts.add(new Heart(screenX, screenY, getResources()));
     }
 
     @Override
@@ -91,9 +102,6 @@ public class GameView extends SurfaceView implements Runnable {
             background2.y = - screenY;
         }
 
-        Log.i("b1", background1.y+"");
-        Log.i("b2", background2.y+"");
-
         // CHECK IMPACT BETWEEN ROCK, BULLET AND SPACESHIP
         for(Rock rock : rocks) {
             if(rock.isVisible()) {
@@ -107,10 +115,15 @@ public class GameView extends SurfaceView implements Runnable {
                     }
 
                     if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
-                        Intent intent = new Intent(activity, GameOverActivity.class);
-                        intent.putExtra("high_score", score+"");
-                        activity.startActivity(intent);
-                        activity.finish();
+                        if(heartNumber == 1) {
+                            Intent intent = new Intent(activity, GameOverActivity.class);
+                            intent.putExtra("high_score", score+"");
+                            activity.startActivity(intent);
+                            activity.finish();
+                        }
+                        heartNumber--;
+                        hearts.get(2 - heartNumber).isLive = false;
+                        rock.x = - 500;
                     }
                 }
             }
@@ -169,6 +182,12 @@ public class GameView extends SurfaceView implements Runnable {
             }
 
             canvas.drawText("Score: " + score, scoreX, scoreY, paintScore);
+
+            int count = 1;
+            for(Heart heart : hearts) {
+                canvas.drawBitmap(heart.getHeart(), screenX - (heart.width * count), heart.y, null);
+                count++;
+            }
 
             getHolder().unlockCanvasAndPost(canvas);
         }
