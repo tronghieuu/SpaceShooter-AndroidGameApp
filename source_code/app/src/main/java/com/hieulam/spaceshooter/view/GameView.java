@@ -1,14 +1,16 @@
 package com.hieulam.spaceshooter.view;
 
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
+import com.hieulam.spaceshooter.GamePlayActivity;
+import com.hieulam.spaceshooter.MainMenuActivity;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -16,16 +18,20 @@ public class GameView extends SurfaceView implements Runnable {
     private List<Bullet> bullets;
     private Thread thread;
     private boolean isPlaying;
-    private int screenX, screenY;
+    private int screenX, screenY, score = 0;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY;
     private Paint paint;
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
+    private GamePlayActivity activity;
 
-    public GameView(Context context, int screenX, int screenY) {
-        super(context);
+    public GameView(GamePlayActivity activity, int screenX, int screenY) {
+        super(activity);
+
+        this.activity = activity;
+
 
         this.screenX = screenX;
         this.screenY = screenY;
@@ -73,22 +79,27 @@ public class GameView extends SurfaceView implements Runnable {
             background2.y = - screenY;
         }
 
+        // CHECK IMPACT BETWEEN ROCK, BULLET AND SPACESHIP
         for(Rock rock : rocks) {
-            for(Bullet bullet : bullets) {
-                if(rock.isVisible()) {
+            if(rock.isVisible()) {
+                for(Bullet bullet : bullets) {
                     if(bullet.isVisible()) {
                         if(bullet.getCollisionShape().intersect(rock.getCollisionShape())) {
                             bullet.x = - 500;
                             rock.x = - 500;
+                            score += 10;
                         }
                     }
+
                     if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
-                        spaceShip.x = - 500;
+                        activity.startActivity(new Intent(activity, MainMenuActivity.class));
+                        activity.finish();
                     }
                 }
             }
         }
 
+        // SHOOTING
         shootingTime++;
         if(shootingTime > 10) {
             shootingTime = 0;
@@ -96,11 +107,12 @@ public class GameView extends SurfaceView implements Runnable {
                 if(!bullet.isVisible()) {
                     bullet.x = spaceShip.x + (float) spaceShip.width / 2;
                     bullet.y = spaceShip.y;
-                    return;
+                    break;
                 }
             }
         }
 
+        // GENERATE ROCK
         rockDropTime++;
         if(rockDropTime > 15) {
             rockDropTime = 0;
@@ -108,7 +120,7 @@ public class GameView extends SurfaceView implements Runnable {
                 if(!rock.isVisible()) {
                     rock.x = (int)(Math.random()*(screenX - rock.width)+1);
                     rock.y = - rock.height + 1;
-                    return;
+                    break;
                 }
             }
         }
@@ -118,10 +130,10 @@ public class GameView extends SurfaceView implements Runnable {
         if(getHolder().getSurface().isValid()) {
 
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
-            canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
+            canvas.drawBitmap(background1.background, background1.x, background1.y, null);
+            canvas.drawBitmap(background2.background, background2.x, background2.y, null);
 
-            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, paint);
+            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, null);
 
             for(Bullet bullet : bullets) {
                 if(bullet.isVisible()) {
@@ -136,6 +148,7 @@ public class GameView extends SurfaceView implements Runnable {
                     canvas.drawBitmap(rock.getRock(), rock.x, rock.y, paint);
                 }
             }
+
             getHolder().unlockCanvasAndPost(canvas);
         }
     }
