@@ -7,9 +7,6 @@ import android.graphics.Rect;
 
 import com.hieulam.spaceshooter.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
 
 public class SpaceShip {
