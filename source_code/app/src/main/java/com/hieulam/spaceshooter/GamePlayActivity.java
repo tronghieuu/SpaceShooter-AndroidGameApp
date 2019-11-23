@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.hieulam.spaceshooter.view.GameView;
 
@@ -28,6 +29,9 @@ public class GamePlayActivity extends AppCompatActivity {
         mGameView = new GameView(this, point.x, point.y);
 
         setContentView(mGameView);
+
+        TextView textView = new TextView(this);
+
     }
 
     @Override
