@@ -24,8 +24,8 @@ public class GameView extends SurfaceView implements Runnable {
     private int screenX, screenY, score = 0;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
-    private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove;
-    private Paint paint;
+    private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
+    private Paint paintScore;
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
     private GamePlayActivity activity;
@@ -60,7 +60,12 @@ public class GameView extends SurfaceView implements Runnable {
 
         background2.y = - screenY;
 
-        paint = new Paint();
+        scoreX = 0 * screenRatioX;
+        scoreY = 100 * screenRatioY;
+
+        paintScore = new Paint();
+        paintScore.setColor(Color.WHITE);
+        paintScore.setTextSize(100 * screenRatioY);
     }
 
     @Override
@@ -141,24 +146,26 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = getHolder().lockCanvas();
 
             canvas.drawColor(Color.parseColor("#19183e"));
-      
-            canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
-            canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
-            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, paint);
+
+            canvas.drawBitmap(background1.background, background1.x, background1.y, null);
+            canvas.drawBitmap(background2.background, background2.x, background2.y, null);
+            canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, null);
 
             for(Bullet bullet : bullets) {
                 if(bullet.isVisible()) {
                     bullet.y = bullet.y - 30 * screenRatioY;
-                    canvas.drawBitmap(bullet.getBullet(), bullet.x, bullet.y, paint);
+                    canvas.drawBitmap(bullet.getBullet(), bullet.x, bullet.y, null);
                 }
             }
 
             for (Rock rock : rocks) {
                 if(rock.isVisible()) {
                     rock.y = rock.y + 20 * screenRatioY;
-                    canvas.drawBitmap(rock.getRock(), rock.x, rock.y, paint);
+                    canvas.drawBitmap(rock.getRock(), rock.x, rock.y, null);
                 }
             }
+
+            canvas.drawText("Score: " + score, scoreX, scoreY, paintScore);
 
             getHolder().unlockCanvasAndPost(canvas);
         }
