@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -36,7 +37,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
     private GamePlayActivity activity;
-    private MediaPlayer mPlayer;
+    private SoundManager soundList;
     private List<Heart> hearts;
 
     public GameView(GamePlayActivity activity, int screenX, int screenY) {
@@ -77,6 +78,10 @@ public class GameView extends SurfaceView implements Runnable {
         paintScore.setColor(Color.WHITE);
         paintScore.setTextSize(100 * screenRatioY);
 
+        // SOUND
+        soundList = new SoundManager();
+        soundList.InitSound(this.getContext());
+
         // HEART CONTAINER
         hearts = new ArrayList<>();
         hearts.add(new Heart(screenX, screenY, getResources()));
@@ -115,21 +120,19 @@ public class GameView extends SurfaceView implements Runnable {
                             bullet.x = - 500;
                             rock.x = - 500;
                             score += 10;
-                            if (mPlayer != null) {
-                                mPlayer.release();
-                                mPlayer = null;
-                            }
-                            mPlayer = MediaPlayer.create(this.getContext(), R.raw.rock_shot_destroy);
-                            mPlayer.start();
+
+                            soundList.playSound(1);
                         }
                     }
 
                     if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
+                        soundList.playSound(2);
                         if(heartNumber == 1) {
                             Intent intent = new Intent(activity, GameOverActivity.class);
                             intent.putExtra("high_score", score+"");
                             activity.startActivity(intent);
                             activity.finish();
+                            //soundList.cleanUpIfEnd();
                         }
                         heartNumber--;
                         hearts.get(2 - heartNumber).isLive = false;
