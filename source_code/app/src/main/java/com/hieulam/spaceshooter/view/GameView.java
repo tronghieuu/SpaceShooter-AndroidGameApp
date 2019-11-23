@@ -3,6 +3,7 @@ package com.hieulam.spaceshooter.view;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -130,9 +131,11 @@ public class GameView extends SurfaceView implements Runnable {
         if(getHolder().getSurface().isValid()) {
 
             Canvas canvas = getHolder().lockCanvas();
+
+            canvas.drawColor( 0, PorterDuff.Mode.CLEAR);
+      
             canvas.drawBitmap(background1.background, background1.x, background1.y, null);
             canvas.drawBitmap(background2.background, background2.x, background2.y, null);
-
             canvas.drawBitmap(spaceShip.getSpaceShip(), spaceShip.x, spaceShip.y, null);
 
             for(Bullet bullet : bullets) {
