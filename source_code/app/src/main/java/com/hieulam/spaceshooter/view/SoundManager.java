@@ -19,17 +19,23 @@ public class SoundManager extends Activity
                     .build();
 
 
-        sm = new int[3];
+        sm = new int[6];
         // fill your sounds
         sm[0] = soundPool.load(mContext, R.raw.rock_shot_divide, 1);
         sm[1] = soundPool.load(mContext, R.raw.rock_shot_destroy, 1);
         sm[2] = soundPool.load(mContext, R.raw.ship_explosion, 1);
-
+        sm[3] = soundPool.load(mContext, R.raw.music_main_menu, 1);
+        sm[4] = soundPool.load(mContext, R.raw.music_in_game, 1);
+        sm[5] = soundPool.load(mContext, R.raw.music_gameover, 1);
     }
 
     static void playSound(int sound) {
-
         soundPool.play(sm[sound], 1, 1, 1, 0, 1f);
+    }
+    
+    static void playMusic(int sound) {
+
+        soundPool.play(sm[sound], 1, 1, 1, 1, 1f);
     }
 
     public final void cleanUpIfEnd() {
