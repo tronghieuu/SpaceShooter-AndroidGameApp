@@ -1,16 +1,20 @@
 package com.hieulam.spaceshooter.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import com.hieulam.spaceshooter.GamePlayActivity;
 import com.hieulam.spaceshooter.MainMenuActivity;
+import com.hieulam.spaceshooter.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Background background1, background2;
     private float shootingTime = 0, rockDropTime = 0;
     private GamePlayActivity activity;
-
+    private MediaPlayer mPlayer;
     public GameView(GamePlayActivity activity, int screenX, int screenY) {
         super(activity);
 
@@ -97,6 +101,12 @@ public class GameView extends SurfaceView implements Runnable {
                             bullet.x = - 500;
                             rock.x = - 500;
                             score += 10;
+                            if (mPlayer != null) {
+                                mPlayer.release();
+                                mPlayer = null;
+                            }
+                            mPlayer = MediaPlayer.create(this.getContext(), R.raw.rock_shot_destroy);
+                            mPlayer.start();
                         }
                     }
 
