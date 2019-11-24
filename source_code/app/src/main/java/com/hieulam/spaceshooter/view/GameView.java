@@ -1,6 +1,5 @@
 package com.hieulam.spaceshooter.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.view.SurfaceView;
 import com.hieulam.spaceshooter.GameOverActivity;
 import com.hieulam.spaceshooter.GamePlayActivity;
 import com.hieulam.spaceshooter.MainActivity;
-import com.hieulam.spaceshooter.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
