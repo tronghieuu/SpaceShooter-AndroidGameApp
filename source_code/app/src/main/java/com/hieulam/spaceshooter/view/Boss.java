@@ -11,15 +11,16 @@ import com.hieulam.spaceshooter.R;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.hieulam.spaceshooter.GamePlayActivity.point;
 import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
 
 public class Boss {
 
-    int width, height, bossAngle = 0, hp = 100;
+    int width, height, bossAngle = 0, hp = 50;
     float x, y, speedX, speedY, boxX, boxY, radius;
     Bitmap boss;
 
-    Boss(Resources res, float screenX, float screenY, float speed) {
+    Boss(Resources res) {
         boss = BitmapFactory.decodeResource(res, R.drawable.boss);
 
         width = boss.getWidth();
@@ -31,6 +32,14 @@ public class Boss {
 
         boss = Bitmap.createScaledBitmap(boss, width, height, false);
 
+        x = - 500;
+        y = - 500;
+
+        radius = width/2;
+    }
+
+    public void spawnBoss(float screenX, float screenY, float speed, int hp){
+        this.hp = hp;
         x = screenX / 2 - width / 2;
         y = screenY * 1/5 - height / 2;
 
@@ -42,7 +51,7 @@ public class Boss {
         speedY = (float) Math.sin(Math.toRadians(angle))*speed;
         this.boxX = screenX;
         this.boxY = screenY;
-        radius = width/2;
+
     }
 
     Bitmap getBoss() {
@@ -120,6 +129,10 @@ public class Boss {
         if (distance <= radius) {
             return true;
         }
+        return false;
+    }
+    boolean isVisible() {
+        if(x > - width && x < point.x && y > - height && y < point.y) return true;
         return false;
     }
 

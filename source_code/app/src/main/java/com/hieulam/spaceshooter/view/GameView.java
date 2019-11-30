@@ -69,11 +69,12 @@ public class GameView extends SurfaceView implements Runnable {
         */
 
         // BOSS
-        boss = new Boss(getResources(),screenX,screenY,3 );
+        boss = new Boss(getResources());
+        boss.spawnBoss(screenX,screenY,3, 100);
 
         // BOSS BULLET
         bossBullets = new ArrayList<>();
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 40; i++) {
             bossBullets.add(new BossBullet(getResources()));
         }
 
@@ -139,13 +140,14 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         // CHECK BOSS
-        if(boss!=null) {
+        if(boss.hp>0) {
             for(Bullet bullet : bullets) {
                 if(bullet.isVisible()) {
                     if(boss.ObjectCollisionDetect(bullet.x,bullet.y,bullet.width,bullet.height)) {
                         bullet.x = - 500;
                         score += 5;
                         boss.hp--;
+                        if (boss.hp<=0) score += 1000;
                         MainActivity.soundList.playSound(1);
                     }
                 }
@@ -165,19 +167,32 @@ public class GameView extends SurfaceView implements Runnable {
             }
             //BOSS SHOOTING
             bossShootingTime++;
-            if(bossShootingTime > 30) {
+            if(bossShootingTime > 50) {
                 bossShootingTime = 0;
+                int bulletCountMax, bulletCount = 1;
+                if (boss.hp>60) bulletCountMax = 1;
+                    else if (boss.hp>10) bulletCountMax = 3;
+                        else bulletCountMax = 5;
                 for(BossBullet bossBullet : bossBullets) {
                     if(!bossBullet.isVisible()) {
                         bossBullet.x = boss.x + boss.radius;
                         bossBullet.y = boss.y + boss.radius;
                         int angle = (int)(Math.atan2(spaceShip.y + spaceShip.height/2 - bossBullet.y, spaceShip.x +spaceShip.width/2 - bossBullet.x) * 180 / Math.PI);
 
+                        if (bulletCount%2 == 1)
+                            angle+=(bulletCount/2) *10;
+                        else if (bulletCount%2 == 0)
+                            angle-=(bulletCount/2) *10;
                         if(angle < 0){
                             angle += 360;
                         }
-                        bossBullet.setBullet(angle,5);
-                        break;
+                        else if(angle > 360){
+                            angle -= 360;
+                        }
+                        bossBullet.setBullet(angle,4);
+                        bulletCount++;
+                        if (bulletCount>bulletCountMax)
+                            break;
                     }
                 }
             }
@@ -236,7 +251,7 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
 
-            if(boss!=null) {
+            if(boss.hp>0) {
                 boss.moveOneStepWithCollisionDetection();
                 canvas.drawBitmap(boss.getBoss(), boss.x, boss.y, null);
                 for(BossBullet bossBullet : bossBullets) {
