@@ -18,6 +18,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     private List<Rock> rocks;
     private List<Bullet> bullets;
+    private Boss boss;
+    private List<BossBullet> bossBullets;
     private Thread thread;
     private boolean isPlaying;
     private int screenX, screenY, score = 0, heartNumber = 3;
@@ -26,7 +28,7 @@ public class GameView extends SurfaceView implements Runnable {
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
     private Paint paintScore;
     private Background background1, background2;
-    private float shootingTime = 0, rockDropTime = 0;
+    private float shootingTime = 0, rockDropTime = 0, bossShootingTime = 0;
     private GamePlayActivity activity;
 
     private List<Heart> hearts;
@@ -52,14 +54,27 @@ public class GameView extends SurfaceView implements Runnable {
 
         // BULLET FOR SHOOTING
         bullets = new ArrayList<>();
+
         for(int i = 0; i < 20; i++) {
             bullets.add(new Bullet(getResources()));
         }
 
         // ROCK FOR HINDRANCE
+
         rocks = new ArrayList<>();
+        /*
         for(int i = 0; i < 20; i++) {
             rocks.add(new Rock(getResources()));
+        }
+        */
+
+        // BOSS
+        boss = new Boss(getResources(),screenX,screenY,3 );
+
+        // BOSS BULLET
+        bossBullets = new ArrayList<>();
+        for(int i = 0; i < 20; i++) {
+            bossBullets.add(new BossBullet(getResources()));
         }
 
         // CONFIGURE PAIN FOR SCORE TEXT
@@ -116,21 +131,58 @@ public class GameView extends SurfaceView implements Runnable {
                     }
 
                     if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
-                        MainActivity.soundList.playSound(2);
-                        if(heartNumber == 1) {
-                            Intent intent = new Intent(activity, GameOverActivity.class);
-                            intent.putExtra("high_score", score+"");
-                            activity.startActivity(intent);
-                            activity.finish();
-                            MainActivity.soundList.stopMusic(4);
-                        }
-                        heartNumber--;
-                        hearts.get(2 - heartNumber).isLive = false;
                         rock.x = - 500;
+                        spaceShipGotShot();
                     }
                 }
             }
         }
+
+        // CHECK BOSS
+        if(boss!=null) {
+            for(Bullet bullet : bullets) {
+                if(bullet.isVisible()) {
+                    if(boss.ObjectCollisionDetect(bullet.x,bullet.y,bullet.width,bullet.height)) {
+                        bullet.x = - 500;
+                        score += 5;
+                        boss.hp--;
+                        MainActivity.soundList.playSound(1);
+                    }
+                }
+
+
+            }
+            if(boss.ObjectCollisionDetect(spaceShip.x,spaceShip.y,spaceShip.width,spaceShip.height)) {
+                spaceShipGotShot();
+            }
+            for(BossBullet bossBullet : bossBullets) {
+                if (bossBullet.isVisible()) {
+                    if (bossBullet.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
+                        bossBullet.x = -500;
+                        spaceShipGotShot();
+                    }
+                }
+            }
+            //BOSS SHOOTING
+            bossShootingTime++;
+            if(bossShootingTime > 30) {
+                bossShootingTime = 0;
+                for(BossBullet bossBullet : bossBullets) {
+                    if(!bossBullet.isVisible()) {
+                        bossBullet.x = boss.x + boss.radius;
+                        bossBullet.y = boss.y + boss.radius;
+                        int angle = (int)(Math.atan2(spaceShip.y + spaceShip.height/2 - bossBullet.y, spaceShip.x +spaceShip.width/2 - bossBullet.x) * 180 / Math.PI);
+
+                        if(angle < 0){
+                            angle += 360;
+                        }
+                        bossBullet.setBullet(angle,5);
+                        break;
+                    }
+                }
+            }
+        }
+
 
         // SHOOTING
         shootingTime++;
@@ -184,6 +236,17 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
 
+            if(boss!=null) {
+                boss.moveOneStepWithCollisionDetection();
+                canvas.drawBitmap(boss.getBoss(), boss.x, boss.y, null);
+                for(BossBullet bossBullet : bossBullets) {
+                    if(bossBullet.isVisible()) {
+                        bossBullet.moveForward();
+                        canvas.drawBitmap(bossBullet.getBullet(), bossBullet.x, bossBullet.y, null);
+                    }
+                }
+            }
+
             canvas.drawText("Score: " + score, scoreX, scoreY, paintScore);
 
             int count = 1;
@@ -217,6 +280,20 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void spaceShipGotShot(){
+        MainActivity.soundList.playSound(2);
+        if(heartNumber == 1) {
+            Intent intent = new Intent(activity, GameOverActivity.class);
+            intent.putExtra("high_score", score+"");
+            activity.startActivity(intent);
+            activity.finish();
+            MainActivity.soundList.stopMusic(4);
+            return;
+        }
+        heartNumber--;
+        hearts.get(2 - heartNumber).isLive = false;
     }
 
     @Override
