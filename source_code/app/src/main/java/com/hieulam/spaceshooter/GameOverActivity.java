@@ -16,11 +16,11 @@ public class GameOverActivity extends AppCompatActivity {
 
         TextView tvHighScore = findViewById(R.id.tvHighScore);
         tvHighScore.setText(getIntent().getStringExtra("high_score"));
-        MainActivity.soundList.playMusic(5);
+        MainActivity.soundList.playMusic(getApplicationContext(),3);
         findViewById(R.id.tvMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.soundList.stopMusic(5);
+                MainActivity.soundList.stopMusic();
                 startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                 finish();
             }
@@ -29,7 +29,7 @@ public class GameOverActivity extends AppCompatActivity {
         findViewById(R.id.tvReplay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.soundList.stopMusic(5);
+                MainActivity.soundList.stopMusic();
                 startActivity(new Intent(getApplicationContext(), GamePlayActivity.class));
                 finish();
             }

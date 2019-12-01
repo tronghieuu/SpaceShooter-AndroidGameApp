@@ -20,7 +20,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         init();
         addListener();
-        MainActivity.soundList.playMusic(3);
+        MainActivity.soundList.playMusic(getApplicationContext(),1);
     }
 
     private void init(){
@@ -35,7 +35,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tvPlay:
-                MainActivity.soundList.stopMusic(3);
+                MainActivity.soundList.stopMusic();
                 startActivity(new Intent(this, GamePlayActivity.class));
                 break;
         }

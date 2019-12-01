@@ -303,7 +303,7 @@ public class GameView extends SurfaceView implements Runnable {
             intent.putExtra("high_score", score+"");
             activity.startActivity(intent);
             activity.finish();
-            MainActivity.soundList.stopMusic(4);
+            MainActivity.soundList.stopMusic();
             return;
         }
         heartNumber--;
