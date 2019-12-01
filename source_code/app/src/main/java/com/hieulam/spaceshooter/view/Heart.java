@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 
 import com.hieulam.spaceshooter.R;
 
-import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
+import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class Heart {
 
@@ -19,8 +19,8 @@ public class Heart {
         heart = BitmapFactory.decodeResource(res, R.drawable.heart);
         heart_grey = BitmapFactory.decodeResource(res, R.drawable.heart_grey);
 
-        width = (int) (heart.getWidth() * screenRatioX);
-        height = (int) (heart.getHeight() * screenRatioX);
+        width = (int) (heart.getWidth() * screenRatioY * 3f);
+        height = (int) (heart.getHeight() * screenRatioY * 3f);
 
         heart = Bitmap.createScaledBitmap(heart, width, height, false);
         heart_grey = Bitmap.createScaledBitmap(heart_grey, width, height, false);

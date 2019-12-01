@@ -12,7 +12,7 @@ import com.hieulam.spaceshooter.R;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.hieulam.spaceshooter.GamePlayActivity.point;
-import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
+import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class Boss {
 
@@ -27,8 +27,8 @@ public class Boss {
         height = boss.getHeight();
 
 
-        width = (int) (width * screenRatioX * 0.5f);
-        height = (int) (height * screenRatioX * 0.5f);
+        width = (int) (width * screenRatioY * 0.6f);
+        height = (int) (height * screenRatioY * 0.6f);
 
         boss = Bitmap.createScaledBitmap(boss, width, height, false);
 
@@ -38,10 +38,10 @@ public class Boss {
         radius = width/2;
     }
 
-    public void spawnBoss(float screenX, float screenY, float speed, int hp){
+    public void spawnBoss(float screenX, float screenY, int boxSize, float speed, int hp){
         this.hp = hp;
         x = screenX / 2 - width / 2;
-        y = screenY * 1/5 - height / 2;
+        y = height;
 
         int angle = ThreadLocalRandom.current().nextInt(1, 360 + 1);
         while (angle%90 < 20 || angle%90 > 70 ){
@@ -50,7 +50,7 @@ public class Boss {
         speedX = (float) Math.cos(Math.toRadians(angle))*speed;
         speedY = (float) Math.sin(Math.toRadians(angle))*speed;
         this.boxX = screenX;
-        this.boxY = screenY;
+        this.boxY = screenY*(boxSize/(float)3);
 
     }
 
@@ -106,6 +106,14 @@ public class Boss {
         speedY = -speedY;
     }
 
+    public boolean CircleCollisionDetect(float cRadius, float cX, float cY){
+        float dx = (x+radius) - (cX+cRadius);
+        float dy = (y+radius) - (cY+cRadius);
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < radius + cRadius) return true;
+        return false;
+    }
     public boolean ObjectCollisionDetect(float rx, float ry, float rw, float rh) {
 
         // temporary variables to set edges for testing

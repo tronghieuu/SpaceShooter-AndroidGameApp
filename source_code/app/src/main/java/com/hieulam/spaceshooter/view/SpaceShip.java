@@ -8,12 +8,12 @@ import android.graphics.Rect;
 import com.hieulam.spaceshooter.MainActivity;
 import com.hieulam.spaceshooter.R;
 
-import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
+import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class SpaceShip {
 
     int width, height, spaceShipFrame = 0;
-    float x, y;
+    float x, y, radius;
     Bitmap spaceShip1, spaceShip2, spaceShip3, spaceShip4, spaceShip5, spaceShip6, spaceShip7, spaceShip8;
 
     SpaceShip(int screenX, int screenY, Resources res) {
@@ -29,8 +29,8 @@ public class SpaceShip {
         width = spaceShip1.getWidth();
         height = spaceShip1.getHeight();
 
-        width = (int) (width * screenRatioX);
-        height = (int) (height * screenRatioX);
+        width = (int) (width * screenRatioY * 1.5f);
+        height = (int) (height * screenRatioY * 1.5f);
 
         spaceShip1 = Bitmap.createScaledBitmap(spaceShip1, width, height, false);
         spaceShip2 = Bitmap.createScaledBitmap(spaceShip2, width, height, false);
@@ -43,6 +43,8 @@ public class SpaceShip {
 
         x = screenX / 2 - width / 2;
         y = screenY * 4/5 - height / 2;
+
+        radius = width/2;
     }
 
     Bitmap getSpaceShip() {
@@ -73,6 +75,15 @@ public class SpaceShip {
                 return spaceShip8;
         }
         return spaceShip1;
+    }
+
+    public boolean CircleCollisionDetect(float cRadius, float cX, float cY){
+        float dx = (x+radius) - (cX+cRadius);
+        float dy = (y+radius) - (cY+cRadius);
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < radius + cRadius) return true;
+        return false;
     }
 
     Rect getCollisionShape() {
