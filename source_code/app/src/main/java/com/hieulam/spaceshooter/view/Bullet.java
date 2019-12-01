@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
+import com.hieulam.spaceshooter.MainActivity;
 import com.hieulam.spaceshooter.R;
 
 import static com.hieulam.spaceshooter.GamePlayActivity.point;
@@ -21,8 +22,8 @@ public class Bullet {
 
         width = bullet.getWidth();
         height = bullet.getHeight();
-        width = (int) (width * screenRatioY * 2f);
-        height = (int) (height * screenRatioY * 2f);
+        width = (int) (width * MainActivity.density * 2f);
+        height = (int) (height * MainActivity.density * 2f);
 
         bullet = Bitmap.createScaledBitmap(bullet, width, height, false);
 
