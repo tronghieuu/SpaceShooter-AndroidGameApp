@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
+import com.hieulam.spaceshooter.MainActivity;
 import com.hieulam.spaceshooter.R;
 
 import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
@@ -41,7 +42,7 @@ public class SpaceShip {
         spaceShip8 = Bitmap.createScaledBitmap(spaceShip8, width, height, false);
 
         x = screenX / 2 - width / 2;
-        y = screenY / 2 - height / 2;
+        y = screenY * 4/5 - height / 2;
     }
 
     Bitmap getSpaceShip() {
