@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
+import com.hieulam.spaceshooter.MainActivity;
 import com.hieulam.spaceshooter.R;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,8 +17,8 @@ import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class Boss {
 
-    int width, height, bossAngle = 0, hp = 50;
-    float x, y, speedX, speedY, boxX, boxY, radius;
+    int width, height, bossAngle = 0, hp = 0;
+    float x, y, speedX, speedY, boxX, boxY, radius, bossShootingTime = 0;
     Bitmap boss;
 
     Boss(Resources res) {
@@ -27,8 +28,8 @@ public class Boss {
         height = boss.getHeight();
 
 
-        width = (int) (width * screenRatioY * 0.6f);
-        height = (int) (height * screenRatioY * 0.6f);
+        width = (int) (width * MainActivity.density * 0.6f);
+        height = (int) (height * MainActivity.density * 0.6f);
 
         boss = Bitmap.createScaledBitmap(boss, width, height, false);
 

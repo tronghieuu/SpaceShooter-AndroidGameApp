@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.hieulam.spaceshooter.MainActivity;
 import com.hieulam.spaceshooter.R;
 
 import java.util.Random;
@@ -18,7 +19,7 @@ import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 public class Rock {
 
     int width, height, rockAngle = 0;
-    float x, y, min = 0.7f, max = 1.3f, radius;
+    float x, y, min = 2f, max = 3f, radius, speedY;
     Bitmap rock;
 
     Rock(Resources res) {
@@ -29,8 +30,8 @@ public class Rock {
 
         Random r = new Random();
         float random = min + r.nextFloat() * (max - min);
-        width = (int) (width * screenRatioY * random);
-        height = (int) (height * screenRatioY * random);
+        width = (int) (width * MainActivity.density * random);
+        height = (int) (height * MainActivity.density * random);
 
         rock = Bitmap.createScaledBitmap(rock, width, height, false);
 
@@ -38,6 +39,16 @@ public class Rock {
         y = - 500;
 
         radius = width/2;
+    }
+
+    public void moveForward() {
+        y += speedY;
+    }
+
+    public void setRock(float x, float y, float ySpeed) {
+        this.x = x;
+        this.y = y;
+        speedY = ySpeed;
     }
 
     public boolean CircleCollisionDetect(float cRadius, float cX, float cY){

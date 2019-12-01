@@ -29,8 +29,8 @@ public class SpaceShip {
         width = spaceShip1.getWidth();
         height = spaceShip1.getHeight();
 
-        width = (int) (width * screenRatioY * 1.5f);
-        height = (int) (height * screenRatioY * 1.5f);
+        width = (int) (width * MainActivity.density * 1.5f);
+        height = (int) (height * MainActivity.density * 1.5f);
 
         spaceShip1 = Bitmap.createScaledBitmap(spaceShip1, width, height, false);
         spaceShip2 = Bitmap.createScaledBitmap(spaceShip2, width, height, false);
@@ -82,7 +82,7 @@ public class SpaceShip {
         float dy = (y+radius) - (cY+cRadius);
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < radius + cRadius) return true;
+        if (distance < radius/2 + cRadius) return true;
         return false;
     }
 

@@ -13,22 +13,23 @@ import com.hieulam.spaceshooter.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameView extends SurfaceView implements Runnable {
 
     private List<Rock> rocks;
     private List<Bullet> bullets;
-    private Boss boss;
+    private List<Boss> bosses;
     private List<BossBullet> bossBullets;
     private Thread thread;
-    private boolean isPlaying;
-    private int screenX, screenY, score = 0, heartNumber = 3;
+    private boolean isPlaying, isBossesAlive;
+    private int screenX, screenY, score = 0, heartNumber = 3, stage = 1;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
     private Paint paintScore;
     private Background background1, background2;
-    private float shootingTime = 0, rockDropTime = 0, bossShootingTime = 0;
+    private float shootingTime = 0,  rockDropTime = 0, bossTimer = 0;
     private GamePlayActivity activity;
 
     private List<Heart> hearts;
@@ -55,26 +56,28 @@ public class GameView extends SurfaceView implements Runnable {
         // BULLET FOR SHOOTING
         bullets = new ArrayList<>();
 
-        for(int i = 0; i < 20; i++) {
+        for(int i = 0; i < 100; i++) {
             bullets.add(new Bullet(getResources()));
         }
 
         // ROCK FOR HINDRANCE
 
         rocks = new ArrayList<>();
-        /*
-        for(int i = 0; i < 20; i++) {
+
+        for(int i = 0; i < 30; i++) {
             rocks.add(new Rock(getResources()));
         }
-        */
+
 
         // BOSS
-        boss = new Boss(getResources());
-        boss.spawnBoss(screenX,screenY,1,3, 100);
+        bosses = new ArrayList<>();
+        for(int i = 0; i < 3; i++) {
+            bosses.add(new Boss(getResources()));
+        }
 
         // BOSS BULLET
         bossBullets = new ArrayList<>();
-        for(int i = 0; i < 40; i++) {
+        for(int i = 0; i < 150; i++) {
             bossBullets.add(new BossBullet(getResources()));
         }
 
@@ -131,72 +134,108 @@ public class GameView extends SurfaceView implements Runnable {
                         }
                     }
 
-                    if(rock.CircleCollisionDetect(spaceShip.radius,spaceShip.x,spaceShip.y))  {
+                    if(spaceShip.CircleCollisionDetect(rock.radius,rock.x,rock.y))  {
                         rock.x = - 500;
                         spaceShipGotShot();
                     }
                 }
             }
         }
+
+        // BOSS BULLET CHECK
+        for(BossBullet bossBullet : bossBullets) {
+            if (bossBullet.isVisible()) {
+                if (spaceShip.CircleCollisionDetect(bossBullet.radius,bossBullet.x,bossBullet.y)) {
+                    bossBullet.x = -500;
+                    spaceShipGotShot();
+                }
+            }
+        }
         // CHECK BOSS
-        if(boss.hp>0) {
-            for(Bullet bullet : bullets) {
-                if(bullet.isVisible()) {
-                    if(boss.CircleCollisionDetect(bullet.radius,bullet.x,bullet.y)) {
-                        bullet.x = - 500;
-                        score += 5;
-                        boss.hp--;
-                        if (boss.hp<=0) score += 1000;
-                        MainActivity.soundList.playSound(1);
+        isBossesAlive=false;
+        for(Boss boss : bosses) {
+            if (boss.hp > 0) {
+                isBossesAlive=true;
+                for (Bullet bullet : bullets) {
+                    if (bullet.isVisible()) {
+                        if (boss.CircleCollisionDetect(bullet.radius, bullet.x, bullet.y)) {
+                            bullet.x = -500;
+                            score += 5;
+                            boss.hp--;
+                            if (boss.hp <= 0) {
+                                score += 1000;
+                                bossTimer = 0;
+                                stage++;
+                            }
+                            MainActivity.soundList.playSound(1);
+                        }
                     }
+
+
+                }
+                if (boss.CircleCollisionDetect(spaceShip.radius, spaceShip.x, spaceShip.y)) {
+                    spaceShipGotShot();
                 }
 
+                //BOSS SHOOTING
+                boss.bossShootingTime++;
+                if (boss.bossShootingTime > 50) {
+                    boss.bossShootingTime = 0;
+                    int bulletCountMax, bulletCount = 1;
+                    if (boss.hp > 60) bulletCountMax = 1;
+                    else if (boss.hp > 10) bulletCountMax = 3;
+                    else bulletCountMax = 5;
+                    for (BossBullet bossBullet : bossBullets) {
+                        if (!bossBullet.isVisible()) {
+                            bossBullet.x = boss.x + boss.radius;
+                            bossBullet.y = boss.y + boss.radius;
+                            int angle = (int) (Math.atan2(spaceShip.y + spaceShip.height / 2 - bossBullet.y, spaceShip.x + spaceShip.width / 2 - bossBullet.x) * 180 / Math.PI);
 
-            }
-            if(boss.CircleCollisionDetect(spaceShip.radius,spaceShip.x,spaceShip.y)) {
-                spaceShipGotShot();
-            }
-            for(BossBullet bossBullet : bossBullets) {
-                if (bossBullet.isVisible()) {
-                    if (spaceShip.CircleCollisionDetect(bossBullet.radius,bossBullet.x,bossBullet.y)) {
-                        bossBullet.x = -500;
-                        spaceShipGotShot();
-                    }
-                }
-            }
-            //BOSS SHOOTING
-            bossShootingTime++;
-            if(bossShootingTime > 50) {
-                bossShootingTime = 0;
-                int bulletCountMax, bulletCount = 1;
-                if (boss.hp>60) bulletCountMax = 1;
-                    else if (boss.hp>10) bulletCountMax = 3;
-                        else bulletCountMax = 5;
-                for(BossBullet bossBullet : bossBullets) {
-                    if(!bossBullet.isVisible()) {
-                        bossBullet.x = boss.x + boss.radius;
-                        bossBullet.y = boss.y + boss.radius;
-                        int angle = (int)(Math.atan2(spaceShip.y + spaceShip.height/2 - bossBullet.y, spaceShip.x +spaceShip.width/2 - bossBullet.x) * 180 / Math.PI);
-
-                        if (bulletCount%2 == 1)
-                            angle+=(bulletCount/2) *10;
-                        else if (bulletCount%2 == 0)
-                            angle-=(bulletCount/2) *10;
-                        if(angle < 0){
-                            angle += 360;
+                            if (bulletCount % 2 == 1)
+                                angle += (bulletCount / 2) * 10;
+                            else if (bulletCount % 2 == 0)
+                                angle -= (bulletCount / 2) * 10;
+                            if (angle < 0) {
+                                angle += 360;
+                            } else if (angle > 360) {
+                                angle -= 360;
+                            }
+                            bossBullet.setBullet(angle, 4);
+                            bulletCount++;
+                            if (bulletCount > bulletCountMax)
+                                break;
                         }
-                        else if(angle > 360){
-                            angle -= 360;
-                        }
-                        bossBullet.setBullet(angle,4);
-                        bulletCount++;
-                        if (bulletCount>bulletCountMax)
-                            break;
                     }
                 }
             }
         }
-
+        if (!isBossesAlive) {
+            // BOSS SPAWN COUNTING TIME
+            bossTimer++;
+            if (bossTimer>500) {
+                int maxBoss;
+                if (stage<3) maxBoss=stage;
+                else maxBoss=3;
+                for(int b=0;b<maxBoss;b++)
+                    bosses.get(b).spawnBoss(screenX,screenY,1,3, 100);
+            }
+            else {
+                // GENERATE ROCK
+                rockDropTime++;
+                if (rockDropTime > 50) {
+                    rockDropTime = 0;
+                    int rockCountMax = ThreadLocalRandom.current().nextInt(1, 3 + 1), rockCount = 1;
+                    for (Rock rock : rocks) {
+                        if (!rock.isVisible()) {
+                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 8);
+                            rockCount++;
+                            if (rockCount > rockCountMax)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
 
         // SHOOTING
         shootingTime++;
@@ -211,18 +250,6 @@ public class GameView extends SurfaceView implements Runnable {
             }
         }
 
-        // GENERATE ROCK
-        rockDropTime++;
-        if(rockDropTime > 15) {
-            rockDropTime = 0;
-            for(Rock rock : rocks) {
-                if(!rock.isVisible()) {
-                    rock.x = (int)(Math.random()*(screenX - rock.width)+1);
-                    rock.y = - rock.height + 1;
-                    break;
-                }
-            }
-        }
     }
 
     private void draw() {
@@ -245,19 +272,22 @@ public class GameView extends SurfaceView implements Runnable {
 
             for (Rock rock : rocks) {
                 if(rock.isVisible()) {
-                    rock.y = rock.y + 20 * screenRatioY;
+                    rock.moveForward();
                     canvas.drawBitmap(rock.getRock(), rock.x, rock.y, null);
                 }
             }
 
-            if(boss.hp>0) {
-                boss.moveOneStepWithCollisionDetection();
-                canvas.drawBitmap(boss.getBoss(), boss.x, boss.y, null);
-                for(BossBullet bossBullet : bossBullets) {
-                    if(bossBullet.isVisible()) {
-                        bossBullet.moveForward();
-                        canvas.drawBitmap(bossBullet.getBullet(), bossBullet.x, bossBullet.y, null);
-                    }
+            for (BossBullet bossBullet : bossBullets) {
+                if (bossBullet.isVisible()) {
+                    bossBullet.moveForward();
+                    canvas.drawBitmap(bossBullet.getBullet(), bossBullet.x, bossBullet.y, null);
+                }
+            }
+
+            for(Boss boss : bosses) {
+                if (boss.hp > 0) {
+                    boss.moveOneStepWithCollisionDetection();
+                    canvas.drawBitmap(boss.getBoss(), boss.x, boss.y, null);
                 }
             }
 
