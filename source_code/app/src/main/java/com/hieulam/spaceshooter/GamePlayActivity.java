@@ -17,7 +17,7 @@ public class GamePlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        MainActivity.soundList.playMusic(4);
+        MainActivity.soundList.playMusic(getApplicationContext(),2);
     }
 
     private void init(){
