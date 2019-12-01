@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "22501247411",
+    "firebase_url": "https://space-shooter-c7a5c.firebaseio.com",
+    "project_id": "space-shooter-c7a5c",
+    "storage_bucket": "space-shooter-c7a5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22501247411:android:4754d40003c524d95f63c6",
+        "android_client_info": {
+          "package_name": "com.hieulam.spaceshooter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22501247411-0qjned5m6q1ackqi3a5731ha4pkvdgpk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hieulam.spaceshooter",
+            "certificate_hash": "dc8484a2e214cd630523ebf4009b335be8fc2fae"
+          }
+        },
+        {
+          "client_id": "22501247411-h3c3tlqalcqujc0gkc769usatqd6cocl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6o6rIsZiXOsXh9Yj6ChkvF8fU5ww6gFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22501247411-h3c3tlqalcqujc0gkc769usatqd6cocl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
