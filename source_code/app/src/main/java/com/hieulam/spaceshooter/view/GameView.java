@@ -350,17 +350,15 @@ public class GameView extends SurfaceView implements Runnable {
                 previousTouchY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(spaceShip.getCollisionShape().contains((int) currentTouchX, (int) currentTouchY)) {
-                    float distanceX = currentTouchX - previousTouchX;
-                    float distanceY = currentTouchY - previousTouchY;
-                    spaceShip.x += distanceX;
-                    spaceShip.y += distanceY;
-                    if(spaceShip.x < - (float) (spaceShip.width / 2) || spaceShip.x > screenX - (float) (spaceShip.width / 2)) {
-                        spaceShip.x -= distanceX;
-                    }
-                    if(spaceShip.y < 0 || spaceShip.y > screenY - spaceShip.height) {
-                        spaceShip.y -= distanceY;
-                    }
+                float distanceX = currentTouchX - previousTouchX;
+                float distanceY = currentTouchY - previousTouchY;
+                spaceShip.x += distanceX;
+                spaceShip.y += distanceY;
+                if(spaceShip.x < - (float) (spaceShip.width / 2) || spaceShip.x > screenX - (float) (spaceShip.width / 2)) {
+                    spaceShip.x -= distanceX;
+                }
+                if(spaceShip.y < 0 || spaceShip.y > screenY - spaceShip.height) {
+                    spaceShip.y -= distanceY;
                 }
                 previousTouchX = currentTouchX;
                 previousTouchY = currentTouchY;
