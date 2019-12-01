@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Space Shooter</string>
     <string name="play_button_name">PLAY</string>
-
+    <string name="rank_button_name">RANKING</string>
+    <string name="account_button_name">ACCOUNT</string>
+    <string name="logout_button_name">LOGOUT</string>
 </resources>
