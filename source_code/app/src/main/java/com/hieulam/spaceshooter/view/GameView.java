@@ -70,7 +70,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         // BOSS
         boss = new Boss(getResources());
-        boss.spawnBoss(screenX,screenY,3, 100);
+        boss.spawnBoss(screenX,screenY,1,3, 100);
 
         // BOSS BULLET
         bossBullets = new ArrayList<>();
@@ -122,7 +122,7 @@ public class GameView extends SurfaceView implements Runnable {
             if(rock.isVisible()) {
                 for(Bullet bullet : bullets) {
                     if(bullet.isVisible()) {
-                        if(bullet.getCollisionShape().intersect(rock.getCollisionShape())) {
+                        if(rock.CircleCollisionDetect(bullet.radius,bullet.x,bullet.y)) {
                             bullet.x = - 500;
                             rock.x = - 500;
                             score += 10;
@@ -131,19 +131,18 @@ public class GameView extends SurfaceView implements Runnable {
                         }
                     }
 
-                    if(rock.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
+                    if(rock.CircleCollisionDetect(spaceShip.radius,spaceShip.x,spaceShip.y))  {
                         rock.x = - 500;
                         spaceShipGotShot();
                     }
                 }
             }
         }
-
         // CHECK BOSS
         if(boss.hp>0) {
             for(Bullet bullet : bullets) {
                 if(bullet.isVisible()) {
-                    if(boss.ObjectCollisionDetect(bullet.x,bullet.y,bullet.width,bullet.height)) {
+                    if(boss.CircleCollisionDetect(bullet.radius,bullet.x,bullet.y)) {
                         bullet.x = - 500;
                         score += 5;
                         boss.hp--;
@@ -154,12 +153,12 @@ public class GameView extends SurfaceView implements Runnable {
 
 
             }
-            if(boss.ObjectCollisionDetect(spaceShip.x,spaceShip.y,spaceShip.width,spaceShip.height)) {
+            if(boss.CircleCollisionDetect(spaceShip.radius,spaceShip.x,spaceShip.y)) {
                 spaceShipGotShot();
             }
             for(BossBullet bossBullet : bossBullets) {
                 if (bossBullet.isVisible()) {
-                    if (bossBullet.getCollisionShape().intersect(spaceShip.getCollisionShape())) {
+                    if (spaceShip.CircleCollisionDetect(bossBullet.radius,bossBullet.x,bossBullet.y)) {
                         bossBullet.x = -500;
                         spaceShipGotShot();
                     }
@@ -205,7 +204,7 @@ public class GameView extends SurfaceView implements Runnable {
             shootingTime = 0;
             for(Bullet bullet : bullets) {
                 if(!bullet.isVisible()) {
-                    bullet.x = spaceShip.x + (float) spaceShip.width / 2;
+                    bullet.x = spaceShip.x + spaceShip.radius - bullet.radius;
                     bullet.y = spaceShip.y;
                     break;
                 }

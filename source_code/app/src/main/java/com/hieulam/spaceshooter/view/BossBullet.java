@@ -11,12 +11,12 @@ import android.graphics.Rect;
 import com.hieulam.spaceshooter.R;
 
 import static com.hieulam.spaceshooter.GamePlayActivity.point;
-import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
+import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class BossBullet {
 
     int width, height;
-    float x, y, a, speedX, speedY;
+    float x, y, a, speedX, speedY, radius;
     Bitmap bullet;
 
     BossBullet(Resources res) {
@@ -24,23 +24,19 @@ public class BossBullet {
 
         width = bullet.getWidth();
         height = bullet.getHeight();
-        width = (int) (width * screenRatioX);
-        height = (int) (height * screenRatioX);
+        width = (int) (width * screenRatioY * 2f);
+        height = (int) (height * screenRatioY * 2f);
 
         bullet = Bitmap.createScaledBitmap(bullet, width, height, false);
 
         x = - 500;
         y = - 500;
+
+        radius = width/2;
     }
 
     Bitmap getBullet() {
-        Bitmap rotateBullet = Bitmap.createBitmap(width,
-                height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(rotateBullet);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(a, width/2, height/2);
-        canvas.drawBitmap(bullet, matrix, new Paint());
-        return rotateBullet;
+        return bullet;
     }
 
     public void moveForward() {

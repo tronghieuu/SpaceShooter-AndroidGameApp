@@ -13,12 +13,12 @@ import com.hieulam.spaceshooter.R;
 import java.util.Random;
 
 import static com.hieulam.spaceshooter.GamePlayActivity.point;
-import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
+import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class Rock {
 
     int width, height, rockAngle = 0;
-    float x, y, min = 0.7f, max = 1.3f;
+    float x, y, min = 0.7f, max = 1.3f, radius;
     Bitmap rock;
 
     Rock(Resources res) {
@@ -29,13 +29,24 @@ public class Rock {
 
         Random r = new Random();
         float random = min + r.nextFloat() * (max - min);
-        width = (int) (width * screenRatioX * random);
-        height = (int) (height * screenRatioX * random);
+        width = (int) (width * screenRatioY * random);
+        height = (int) (height * screenRatioY * random);
 
         rock = Bitmap.createScaledBitmap(rock, width, height, false);
 
         x = - 500;
         y = - 500;
+
+        radius = width/2;
+    }
+
+    public boolean CircleCollisionDetect(float cRadius, float cX, float cY){
+        float dx = (x+radius) - (cX+cRadius);
+        float dy = (y+radius) - (cY+cRadius);
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < radius + cRadius) return true;
+        return false;
     }
 
     Bitmap getRock() {
@@ -51,6 +62,7 @@ public class Rock {
         canvas.drawBitmap(rock, matrix, new Paint());
         return rotateRock;
     }
+
 
     Rect getCollisionShape() {
         return new Rect((int) x, (int) y, (int) x + width, (int) y + height);

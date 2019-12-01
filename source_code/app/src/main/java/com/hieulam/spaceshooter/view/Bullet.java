@@ -8,12 +8,12 @@ import android.graphics.Rect;
 import com.hieulam.spaceshooter.R;
 
 import static com.hieulam.spaceshooter.GamePlayActivity.point;
-import static com.hieulam.spaceshooter.view.GameView.screenRatioX;
+import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class Bullet {
 
     int width, height;
-    float x, y;
+    float x, y, radius;
     Bitmap bullet;
 
     Bullet(Resources res) {
@@ -21,13 +21,15 @@ public class Bullet {
 
         width = bullet.getWidth();
         height = bullet.getHeight();
-        width = (int) (width * screenRatioX);
-        height = (int) (height * screenRatioX);
+        width = (int) (width * screenRatioY * 2f);
+        height = (int) (height * screenRatioY * 2f);
 
         bullet = Bitmap.createScaledBitmap(bullet, width, height, false);
 
         x = - 500;
         y = - 500;
+
+        radius = width/2;
     }
 
     Bitmap getBullet() {
