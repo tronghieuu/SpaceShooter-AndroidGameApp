@@ -3,9 +3,12 @@ package com.hieulam.spaceshooter;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,12 +23,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int GG_SIGN_IN = 1;
     private GoogleSignInClient mGoogleSignInClient;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.tvPlay).setOnClickListener(this);
         findViewById(R.id.tvRank).setOnClickListener(this);
         findViewById(R.id.tvAccount).setOnClickListener(this);
+
+        dialog = new Dialog(this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.loading_progress);
     }
 
     @Override
@@ -60,7 +74,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 if(FirebaseAuth.getInstance().getCurrentUser() != null) {
                     startActivity(new Intent(this, RankingActivity.class));
                 } else {
-                    Toast.makeText(this, "chua login", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You need to login!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.tvAccount:
@@ -81,6 +95,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == GG_SIGN_IN) {
+            dialog.show();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account;
             try {
@@ -89,7 +104,24 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 FirebaseAuth.getInstance().signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        Map<String, Object> data = new HashMap<>();
+                        if(account.getPhotoUrl() != null) {
+                            data.put("image", account.getPhotoUrl().toString());
+                        } else data.put("image", "");
+                        data.put("username", account.getDisplayName());
+                        data.put("age", "");
+                        data.put("gender", "");
+                        data.put("highScore", 0);
+                        FirebaseFirestore.getInstance().collection("user")
+                                .document(user.getUid())
+                                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                dialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
             } catch (ApiException e) {
