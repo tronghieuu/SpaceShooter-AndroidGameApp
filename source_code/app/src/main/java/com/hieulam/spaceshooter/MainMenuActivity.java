@@ -25,6 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -104,22 +105,33 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 FirebaseAuth.getInstance().signInWithCredential(credential).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        Map<String, Object> data = new HashMap<>();
-                        if(account.getPhotoUrl() != null) {
-                            data.put("image", account.getPhotoUrl().toString());
-                        } else data.put("image", "");
-                        data.put("username", account.getDisplayName());
-                        data.put("age", "");
-                        data.put("gender", "");
-                        data.put("highScore", 0);
+                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         FirebaseFirestore.getInstance().collection("user")
-                                .document(user.getUid())
-                                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                .document(user.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                dialog.dismiss();
-                                Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Map<String, Object> data = new HashMap<>();
+                                    if(account.getPhotoUrl() != null) {
+                                        data.put("image", account.getPhotoUrl().toString());
+                                    } else data.put("image", "");
+                                    data.put("username", account.getDisplayName());
+                                    data.put("age", "");
+                                    data.put("gender", "");
+                                    data.put("highScore", 0);
+                                    FirebaseFirestore.getInstance().collection("user")
+                                            .document(user.getUid())
+                                            .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            dialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                             }
                         });
                     }
