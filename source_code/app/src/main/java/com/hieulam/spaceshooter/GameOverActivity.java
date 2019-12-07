@@ -89,7 +89,7 @@ public class GameOverActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             });
-                        }
+                        } else dialog.dismiss();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
