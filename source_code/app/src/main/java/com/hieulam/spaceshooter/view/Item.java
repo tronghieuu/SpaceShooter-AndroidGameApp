@@ -14,26 +14,30 @@ import com.hieulam.spaceshooter.R;
 import java.util.Random;
 
 import static com.hieulam.spaceshooter.GamePlayActivity.point;
-import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
-public class Rock {
+public class Item {
 
-    int width, height, rockAngle = 0, hp;
-    float x, y, min = 2f, max = 3f, radius, speedY;
-    Bitmap rock;
+    int width, height, type;
+    float x, y, radius, speedY;
+    Bitmap item;
 
-    Rock(Resources res) {
-        rock = BitmapFactory.decodeResource(res, R.drawable.rock);
+    Item(Resources res, int type) {
+        this.type = type;
+        if (type==1)
+            item = BitmapFactory.decodeResource(res, R.drawable.item_coin);
+        else if (type==2)
+            item = BitmapFactory.decodeResource(res, R.drawable.item_diamond);
+        else if (type==3)
+            item = BitmapFactory.decodeResource(res, R.drawable.item_heart);
+        else if (type==4)
+            item = BitmapFactory.decodeResource(res, R.drawable.item_blueprint);
 
-        width = rock.getWidth();
-        height = rock.getHeight();
+        width = item.getWidth();
+        height = item.getHeight();
+        width = (int) (width * MainActivity.density * 1f);
+        height = (int) (height * MainActivity.density * 1f);
 
-        Random r = new Random();
-        float random = min + r.nextFloat() * (max - min);
-        width = (int) (width * MainActivity.density * random);
-        height = (int) (height * MainActivity.density * random);
-
-        rock = Bitmap.createScaledBitmap(rock, width, height, false);
+        item = Bitmap.createScaledBitmap(item, width, height, false);
 
         x = - 500;
         y = - 500;
@@ -45,11 +49,10 @@ public class Rock {
         y += speedY;
     }
 
-    public void setRock(float x, float y, float speedY, int hp) {
+    public void setItem(float x, float y, float speedY) {
         this.x = x;
         this.y = y;
         this.speedY = speedY;
-        this.hp=hp;
     }
 
     public boolean CircleCollisionDetect(float cRadius, float cX, float cY){
@@ -61,18 +64,8 @@ public class Rock {
         return false;
     }
 
-    Bitmap getRock() {
-        rockAngle++;
-        if(rockAngle == 360){
-            rockAngle = 0;
-        }
-        Bitmap rotateRock = Bitmap.createBitmap(width,
-                height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(rotateRock);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(rockAngle, width/2, height/2);
-        canvas.drawBitmap(rock, matrix, new Paint());
-        return rotateRock;
+    Bitmap getItem() {
+        return item;
     }
 
 

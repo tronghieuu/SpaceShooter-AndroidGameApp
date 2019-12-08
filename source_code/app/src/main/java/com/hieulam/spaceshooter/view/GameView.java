@@ -1,6 +1,7 @@
 package com.hieulam.spaceshooter.view;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,6 +11,7 @@ import android.view.SurfaceView;
 import com.hieulam.spaceshooter.GameOverActivity;
 import com.hieulam.spaceshooter.GamePlayActivity;
 import com.hieulam.spaceshooter.MainActivity;
+import com.hieulam.spaceshooter.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +23,10 @@ public class GameView extends SurfaceView implements Runnable {
     private List<Bullet> bullets;
     private List<Boss> bosses;
     private List<BossBullet> bossBullets;
+    private List<Item> items;
     private Thread thread;
     private boolean isPlaying, isBossesAlive;
-    private int screenX, screenY, score = 0, heartNumber = 3, stage = 1;
+    private int screenX, screenY, score = 0, heartNumber = 3, stage = 1, shipBulletCountMax=1;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
@@ -68,6 +71,15 @@ public class GameView extends SurfaceView implements Runnable {
             rocks.add(new Rock(getResources()));
         }
 
+        // ITEMS
+        items = new ArrayList<>();
+
+        for(int i = 0; i < 15; i++) {
+            items.add(new Item(getResources(),1));
+        }
+        items.add(new Item(getResources(),2));
+        items.add(new Item(getResources(),3));
+        items.add(new Item(getResources(),4));
 
         // BOSS
         bosses = new ArrayList<>();
@@ -120,17 +132,50 @@ public class GameView extends SurfaceView implements Runnable {
             background2.y = - screenY;
         }
 
+        // CHECK IMPACT BETWEEN ITEM AND SPACESHIP
+        for(Item item : items) {
+            if(item.isVisible()) {
+                    if(spaceShip.CircleCollisionDetect(item.radius,item.x,item.y))  {
+                        item.x = - 500;
+                        if (item.type==1)
+                            score += 50;
+                        else if (item.type==2)
+                            score += 500;
+                        else if (item.type==3){
+                            score += 200;
+                            if (heartNumber<3) {
+                                hearts.get(2 - heartNumber).isLive = true;
+                                heartNumber++;
+                            }
+                        }
+                        else if (item.type==4){
+                            score += 200;
+                            if (shipBulletCountMax<6)
+                                shipBulletCountMax++;
+                        }
+
+                    }
+            }
+        }
+
+
         // CHECK IMPACT BETWEEN ROCK, BULLET AND SPACESHIP
         for(Rock rock : rocks) {
             if(rock.isVisible()) {
                 for(Bullet bullet : bullets) {
                     if(bullet.isVisible()) {
                         if(rock.CircleCollisionDetect(bullet.radius,bullet.x,bullet.y)) {
-                            bullet.x = - 500;
-                            rock.x = - 500;
-                            score += 10;
+                            if (rock.hp <= 1) {
+                                if (Math.random() < 0.3)
+                                    itemGenerate(rock.x, rock.y, true);
 
-                            MainActivity.soundList.playSound(1);
+                                bullet.x = -500;
+                                rock.x = -500;
+                                score += 10;
+
+                                MainActivity.soundList.playSound(1);
+                            }
+                            else rock.hp--;
                         }
                     }
 
@@ -163,6 +208,7 @@ public class GameView extends SurfaceView implements Runnable {
                             score += 5;
                             boss.hp--;
                             if (boss.hp <= 0) {
+                                itemGenerate(boss.x, boss.y, false);
                                 score += 1000;
                                 bossTimer = 0;
                                 stage++;
@@ -212,7 +258,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (!isBossesAlive) {
             // BOSS SPAWN COUNTING TIME
             bossTimer++;
-            if (bossTimer>500) {
+            if (bossTimer>5000) {
                 int maxBoss;
                 if (stage<3) maxBoss=stage;
                 else maxBoss=3;
@@ -227,7 +273,7 @@ public class GameView extends SurfaceView implements Runnable {
                     int rockCountMax = ThreadLocalRandom.current().nextInt(1, 3 + 1), rockCount = 1;
                     for (Rock rock : rocks) {
                         if (!rock.isVisible()) {
-                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 8);
+                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 8,2);
                             rockCount++;
                             if (rockCount > rockCountMax)
                                 break;
@@ -241,11 +287,25 @@ public class GameView extends SurfaceView implements Runnable {
         shootingTime++;
         if(shootingTime > 10) {
             shootingTime = 0;
+            int shipBulletCount = 1, angle;
             for(Bullet bullet : bullets) {
                 if(!bullet.isVisible()) {
+                    angle = 270;
                     bullet.x = spaceShip.x + spaceShip.radius - bullet.radius;
                     bullet.y = spaceShip.y;
-                    break;
+                    if (shipBulletCount % 2 == 1)
+                        angle += (shipBulletCount / 2) * 5;
+                    else if (shipBulletCount % 2 == 0)
+                        angle -= (shipBulletCount / 2) * 5;
+                    if (angle < 0) {
+                        angle += 360;
+                    } else if (angle > 360) {
+                        angle -= 360;
+                    }
+                    bullet.setBullet(angle, 10);
+                    shipBulletCount++;
+                    if (shipBulletCount > shipBulletCountMax)
+                        break;
                 }
             }
         }
@@ -265,7 +325,7 @@ public class GameView extends SurfaceView implements Runnable {
 
             for(Bullet bullet : bullets) {
                 if(bullet.isVisible()) {
-                    bullet.y = bullet.y - 30 * screenRatioY;
+                    bullet.moveForward();
                     canvas.drawBitmap(bullet.getBullet(), bullet.x, bullet.y, null);
                 }
             }
@@ -274,6 +334,13 @@ public class GameView extends SurfaceView implements Runnable {
                 if(rock.isVisible()) {
                     rock.moveForward();
                     canvas.drawBitmap(rock.getRock(), rock.x, rock.y, null);
+                }
+            }
+
+            for (Item item : items) {
+                if(item.isVisible()) {
+                    item.moveForward();
+                    canvas.drawBitmap(item.getItem(), item.x, item.y, null);
                 }
             }
 
@@ -326,6 +393,28 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private void itemGenerate(float x, float y, boolean stage){
+        int itemType;
+        if (stage)
+            itemType = (int) (Math.random() * (17+30) - 30);
+        else itemType = (int) (Math.random() * (3) + 15);
+        if (itemType<15)
+            for (int i=0; i<15; i++) {
+                if (!items.get(i).isVisible()) {
+                    items.get(i).setItem(x, y, 4);
+                    return;
+                }
+            }
+        else if (!items.get(itemType).isVisible()) {
+            items.get(itemType).setItem(x, y, 4);
+            return;
+        }
+        for (int i=15; i<18; i++)
+            if (!items.get(i).isVisible()) {
+                items.get(i).setItem(x, y, 4);
+                return;
+            }
+    }
     private void spaceShipGotShot(){
         MainActivity.soundList.playSound(2);
         if(heartNumber == 1) {
