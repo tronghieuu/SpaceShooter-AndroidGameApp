@@ -51,7 +51,9 @@ public class Boss {
         speedX = (float) Math.cos(Math.toRadians(angle))*speed;
         speedY = (float) Math.sin(Math.toRadians(angle))*speed;
         this.boxX = screenX;
-        this.boxY = screenY*(boxSize/(float)3);
+        if (boxSize<5)
+            this.boxY = screenY*(boxSize/5f);
+        else this.boxY = screenY;
 
     }
 
@@ -102,11 +104,6 @@ public class Boss {
         }
     }
 
-    public void changeDirection(){
-        speedX = -speedX;
-        speedY = -speedY;
-    }
-
     public boolean CircleCollisionDetect(float cRadius, float cX, float cY){
         float dx = (x+radius) - (cX+cRadius);
         float dy = (y+radius) - (cY+cRadius);
@@ -115,31 +112,7 @@ public class Boss {
         if (distance < radius + cRadius) return true;
         return false;
     }
-    public boolean ObjectCollisionDetect(float rx, float ry, float rw, float rh) {
 
-        // temporary variables to set edges for testing
-        float cx = x+radius;
-        float cy = y+radius;
-        float testX = cx;
-        float testY = cy;
-
-        // which edge is closest?
-        if (cx < rx)         testX = rx;      // test left edge
-        else if (cx > rx+rw) testX = rx+rw;   // right edge
-        if (cy < ry)         testY = ry;      // top edge
-        else if (cy > ry+rh) testY = ry+rh;   // bottom edge
-
-        // get distance from closest edges
-        float distX = cx-testX;
-        float distY = cy-testY;
-        float distance = (float) Math.sqrt( (distX*distX) + (distY*distY) );
-
-        // if the distance is less than the radius, collision!
-        if (distance <= radius) {
-            return true;
-        }
-        return false;
-    }
     boolean isVisible() {
         if(x > - width && x < point.x && y > - height && y < point.y) return true;
         return false;

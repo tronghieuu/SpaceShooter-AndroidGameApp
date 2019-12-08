@@ -138,18 +138,18 @@ public class GameView extends SurfaceView implements Runnable {
                     if(spaceShip.CircleCollisionDetect(item.radius,item.x,item.y))  {
                         item.x = - 500;
                         if (item.type==1)
-                            score += 50;
+                            score += 20;
                         else if (item.type==2)
-                            score += 500;
+                            score += 300;
                         else if (item.type==3){
-                            score += 200;
+                            score += 100;
                             if (heartNumber<3) {
                                 hearts.get(2 - heartNumber).isLive = true;
                                 heartNumber++;
                             }
                         }
                         else if (item.type==4){
-                            score += 200;
+                            score += 100;
                             if (shipBulletCountMax<6)
                                 shipBulletCountMax++;
                         }
@@ -168,14 +168,13 @@ public class GameView extends SurfaceView implements Runnable {
                             if (rock.hp <= 1) {
                                 if (Math.random() < 0.3)
                                     itemGenerate(rock.x, rock.y, true);
-
-                                bullet.x = -500;
                                 rock.x = -500;
-                                score += 10;
+                                score += 5;
 
                                 MainActivity.soundList.playSound(1);
                             }
                             else rock.hp--;
+                            bullet.x = -500;
                         }
                     }
 
@@ -205,7 +204,7 @@ public class GameView extends SurfaceView implements Runnable {
                     if (bullet.isVisible()) {
                         if (boss.CircleCollisionDetect(bullet.radius, bullet.x, bullet.y)) {
                             bullet.x = -500;
-                            score += 5;
+                            score += 1;
                             boss.hp--;
                             if (boss.hp <= 0) {
                                 itemGenerate(boss.x, boss.y, false);
@@ -228,8 +227,8 @@ public class GameView extends SurfaceView implements Runnable {
                 if (boss.bossShootingTime > 50) {
                     boss.bossShootingTime = 0;
                     int bulletCountMax, bulletCount = 1;
-                    if (boss.hp > 60) bulletCountMax = 1;
-                    else if (boss.hp > 10) bulletCountMax = 3;
+                    if (boss.hp > (boss.hp*60)/100f) bulletCountMax = 1;
+                    else if (boss.hp > (boss.hp*15)/100f) bulletCountMax = 3;
                     else bulletCountMax = 5;
                     for (BossBullet bossBullet : bossBullets) {
                         if (!bossBullet.isVisible()) {
@@ -246,7 +245,7 @@ public class GameView extends SurfaceView implements Runnable {
                             } else if (angle > 360) {
                                 angle -= 360;
                             }
-                            bossBullet.setBullet(angle, 4);
+                            bossBullet.setBullet(angle, 3 + (stage/3));
                             bulletCount++;
                             if (bulletCount > bulletCountMax)
                                 break;
@@ -258,22 +257,22 @@ public class GameView extends SurfaceView implements Runnable {
         if (!isBossesAlive) {
             // BOSS SPAWN COUNTING TIME
             bossTimer++;
-            if (bossTimer>5000) {
+            if (bossTimer>3000) {
                 int maxBoss;
                 if (stage<3) maxBoss=stage;
                 else maxBoss=3;
                 for(int b=0;b<maxBoss;b++)
-                    bosses.get(b).spawnBoss(screenX,screenY,1,3, 100);
+                    bosses.get(b).spawnBoss(screenX,screenY,stage,2+(stage/3), 100+50*(stage/3));
             }
             else {
                 // GENERATE ROCK
                 rockDropTime++;
                 if (rockDropTime > 50) {
                     rockDropTime = 0;
-                    int rockCountMax = ThreadLocalRandom.current().nextInt(1, 3 + 1), rockCount = 1;
+                    int rockCountMax = (int) (Math.random() * (1+stage) + 1), rockCount = 1;
                     for (Rock rock : rocks) {
                         if (!rock.isVisible()) {
-                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 8,2);
+                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 5+stage,1*stage);
                             rockCount++;
                             if (rockCount > rockCountMax)
                                 break;
@@ -285,7 +284,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         // SHOOTING
         shootingTime++;
-        if(shootingTime > 10) {
+        if(shootingTime > 15) {
             shootingTime = 0;
             int shipBulletCount = 1, angle;
             for(Bullet bullet : bullets) {
@@ -396,7 +395,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void itemGenerate(float x, float y, boolean stage){
         int itemType;
         if (stage)
-            itemType = (int) (Math.random() * (17+30) - 30);
+            itemType = (int) (Math.random() * (18+30) - 30);
         else itemType = (int) (Math.random() * (3) + 15);
         if (itemType<15)
             for (int i=0; i<15; i++) {
