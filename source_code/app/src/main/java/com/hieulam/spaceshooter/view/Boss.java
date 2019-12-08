@@ -51,8 +51,8 @@ public class Boss {
         speedX = (float) Math.cos(Math.toRadians(angle))*speed;
         speedY = (float) Math.sin(Math.toRadians(angle))*speed;
         this.boxX = screenX;
-        if (boxSize<3)
-            this.boxY = screenY*(boxSize/3f);
+        if (boxSize<5)
+            this.boxY = screenY*(boxSize/5f);
         else this.boxY = screenY;
 
     }
