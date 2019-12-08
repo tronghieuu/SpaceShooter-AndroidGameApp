@@ -237,7 +237,7 @@ public class GameView extends SurfaceView implements Runnable {
 
                 //BOSS SHOOTING
                 boss.bossShootingTime++;
-                if (boss.bossShootingTime > 80) {
+                if (boss.bossShootingTime > 50) {
                     boss.bossShootingTime = 0;
                     int bulletCountMax, bulletCount = 1, tam=50+25*(stage/3);
                     if (boss.hp > (tam/2)) bulletCountMax = 3;
@@ -409,27 +409,33 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void itemGenerate(float x, float y, boolean stage){
-        int itemType;
-        if (stage)
-            itemType = (int) (Math.random() * (17+30) - 30);
-        else itemType = (int) (Math.random() * (3) + 15);
-        if (itemType<15)
-            for (int i=0; i<15; i++) {
-                if (!items.get(i).isVisible()) {
-                    items.get(i).setItem(x, y, 4);
-                    return;
+        if (stage) {
+            int itemType = (int) (Math.random() * (18 + 30) - 30);
+            if (itemType < 15)
+                for (int i = 0; i < 15; i++) {
+                    if (!items.get(i).isVisible()) {
+                        items.get(i).setItem(x, y, 4);
+                        return;
+                    }
                 }
-            }
-        else if (!items.get(itemType).isVisible()) {
-            items.get(itemType).setItem(x, y, 4);
-            return;
-        }
-        if (!stage)
-        for (int i=15; i<18; i++)
-            if (!items.get(i).isVisible()) {
-                items.get(i).setItem(x, y, 4);
+            else if (!items.get(itemType).isVisible()) {
+                items.get(itemType).setItem(x, y, 4);
                 return;
             }
+        }
+        else {
+            int item;
+            if (Math.random() < 0.4) item = 16;
+            else item = 17;
+            if (!items.get(item).isVisible()) {
+                items.get(item).setItem(x, y, 4);
+                return;
+            }
+            if (!items.get(15).isVisible()) {
+                items.get(15).setItem(x, y, 4);
+                return;
+            }
+        }
     }
     private void spaceShipGotShot(){
         MainActivity.soundList.playSound(2);
