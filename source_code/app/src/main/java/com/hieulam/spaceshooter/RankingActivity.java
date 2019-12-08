@@ -96,7 +96,17 @@ public class RankingActivity extends AppCompatActivity {
 
         getData();
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.soundList.pauseMusic();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.soundList.resumeMusic();
+    }
     private void getData() {
         isLoading = true;
         FirebaseFirestore.getInstance().collection("user")

@@ -41,7 +41,6 @@ public class GameOverActivity extends AppCompatActivity {
         findViewById(R.id.imageViewMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.soundList.stopMusic();
                 startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                 finish();
             }
@@ -50,7 +49,6 @@ public class GameOverActivity extends AppCompatActivity {
         findViewById(R.id.imageViewReplay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.soundList.stopMusic();
                 startActivity(new Intent(getApplicationContext(), GamePlayActivity.class));
                 finish();
             }
@@ -62,6 +60,18 @@ public class GameOverActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.loading_progress);
 
         updateScore();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.soundList.pauseMusic();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.soundList.resumeMusic();
     }
 
     private void updateScore() {

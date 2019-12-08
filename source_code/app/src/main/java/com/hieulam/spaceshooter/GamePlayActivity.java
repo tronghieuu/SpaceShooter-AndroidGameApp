@@ -31,15 +31,18 @@ public class GamePlayActivity extends AppCompatActivity {
         setContentView(mGameView);
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
+        MainActivity.soundList.pauseMusic();
         mGameView.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        MainActivity.soundList.resumeMusic();
         mGameView.resume();
     }
 }
