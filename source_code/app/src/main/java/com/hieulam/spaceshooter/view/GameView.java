@@ -239,10 +239,10 @@ public class GameView extends SurfaceView implements Runnable {
                 boss.bossShootingTime++;
                 if (boss.bossShootingTime > 80) {
                     boss.bossShootingTime = 0;
-                    int bulletCountMax, bulletCount = 1, tam=100+50*(stage/3);
-                    if (boss.hp > (tam/2)) bulletCountMax = 1;
-                    else if (boss.hp > (tam/4)) bulletCountMax = 3;
-                    else bulletCountMax = 5;
+                    int bulletCountMax, bulletCount = 1, tam=50+25*(stage/3);
+                    if (boss.hp > (tam/2)) bulletCountMax = 3;
+                    else if (boss.hp > (tam/4)) bulletCountMax = 5;
+                    else bulletCountMax = 7;
                     for (BossBullet bossBullet : bossBullets) {
                         if (!bossBullet.isVisible()) {
                             bossBullet.x = boss.x + boss.radius;
@@ -250,9 +250,9 @@ public class GameView extends SurfaceView implements Runnable {
                             int angle = (int) (Math.atan2(spaceShip.y + spaceShip.height / 2 - bossBullet.y, spaceShip.x + spaceShip.width / 2 - bossBullet.x) * 180 / Math.PI);
 
                             if (bulletCount % 2 == 1)
-                                angle += (bulletCount / 2) * 10;
+                                angle += (bulletCount / 2) * 8;
                             else if (bulletCount % 2 == 0)
-                                angle -= (bulletCount / 2) * 10;
+                                angle -= (bulletCount / 2) * 8;
                             if (angle < 0) {
                                 angle += 360;
                             } else if (angle > 360) {
@@ -280,7 +280,7 @@ public class GameView extends SurfaceView implements Runnable {
             else {
                 // GENERATE ROCK
                 rockDropTime++;
-                if (rockDropTime > 35) {
+                if (rockDropTime > 20) {
                     rockDropTime = 0;
                     int rockCountMax = (int) (Math.random() * (1+stage) + 1), rockCount = 1;
                     for (Rock rock : rocks) {
@@ -411,7 +411,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void itemGenerate(float x, float y, boolean stage){
         int itemType;
         if (stage)
-            itemType = (int) (Math.random() * (16+30) - 30);
+            itemType = (int) (Math.random() * (17+30) - 30);
         else itemType = (int) (Math.random() * (3) + 15);
         if (itemType<15)
             for (int i=0; i<15; i++) {
