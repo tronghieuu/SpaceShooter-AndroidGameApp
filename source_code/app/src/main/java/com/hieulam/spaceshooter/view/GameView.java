@@ -165,14 +165,17 @@ public class GameView extends SurfaceView implements Runnable {
                 for(Bullet bullet : bullets) {
                     if(bullet.isVisible()) {
                         if(rock.CircleCollisionDetect(bullet.radius,bullet.x,bullet.y)) {
-                            if (Math.random()<0.3)
-                                itemGenerate(rock.x, rock.y,true);
+                            if (rock.hp <= 1) {
+                                if (Math.random() < 0.3)
+                                    itemGenerate(rock.x, rock.y, true);
 
-                            bullet.x = - 500;
-                            rock.x = - 500;
-                            score += 10;
+                                bullet.x = -500;
+                                rock.x = -500;
+                                score += 10;
 
-                            MainActivity.soundList.playSound(1);
+                                MainActivity.soundList.playSound(1);
+                            }
+                            else rock.hp--;
                         }
                     }
 
@@ -270,7 +273,7 @@ public class GameView extends SurfaceView implements Runnable {
                     int rockCountMax = ThreadLocalRandom.current().nextInt(1, 3 + 1), rockCount = 1;
                     for (Rock rock : rocks) {
                         if (!rock.isVisible()) {
-                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 8);
+                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 8,2);
                             rockCount++;
                             if (rockCount > rockCountMax)
                                 break;
@@ -393,12 +396,12 @@ public class GameView extends SurfaceView implements Runnable {
     private void itemGenerate(float x, float y, boolean stage){
         int itemType;
         if (stage)
-            itemType = (int) (Math.random() * (17+10) - 10);
+            itemType = (int) (Math.random() * (17+30) - 30);
         else itemType = (int) (Math.random() * (3) + 15);
         if (itemType<15)
-            for (Item item : items) {
-                if (!item.isVisible()) {
-                    item.setItem(x, y, 4);
+            for (int i=0; i<15; i++) {
+                if (!items.get(i).isVisible()) {
+                    items.get(i).setItem(x, y, 4);
                     return;
                 }
             }
@@ -406,6 +409,11 @@ public class GameView extends SurfaceView implements Runnable {
             items.get(itemType).setItem(x, y, 4);
             return;
         }
+        for (int i=15; i<18; i++)
+            if (!items.get(i).isVisible()) {
+                items.get(i).setItem(x, y, 4);
+                return;
+            }
     }
     private void spaceShipGotShot(){
         MainActivity.soundList.playSound(2);

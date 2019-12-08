@@ -18,7 +18,7 @@ import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class Rock {
 
-    int width, height, rockAngle = 0;
+    int width, height, rockAngle = 0, hp;
     float x, y, min = 2f, max = 3f, radius, speedY;
     Bitmap rock;
 
@@ -45,10 +45,11 @@ public class Rock {
         y += speedY;
     }
 
-    public void setRock(float x, float y, float ySpeed) {
+    public void setRock(float x, float y, float speedY, int hp) {
         this.x = x;
         this.y = y;
-        speedY = ySpeed;
+        this.speedY = speedY;
+        this.hp=hp;
     }
 
     public boolean CircleCollisionDetect(float cRadius, float cX, float cY){
