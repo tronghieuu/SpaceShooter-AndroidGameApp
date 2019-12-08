@@ -33,4 +33,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui:5.0.0'
     implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
