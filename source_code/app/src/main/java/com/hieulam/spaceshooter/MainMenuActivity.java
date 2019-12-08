@@ -54,9 +54,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        findViewById(R.id.tvPlay).setOnClickListener(this);
+        findViewById(R.id.imageViewPlay).setOnClickListener(this);
         findViewById(R.id.tvRank).setOnClickListener(this);
-        findViewById(R.id.tvAccount).setOnClickListener(this);
 
         dialog = new Dialog(this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -67,7 +66,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.tvPlay:
+            case R.id.imageViewPlay:
                 MainActivity.soundList.stopMusic();
                 startActivity(new Intent(this, GamePlayActivity.class));
                 break;
@@ -75,15 +74,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 if(FirebaseAuth.getInstance().getCurrentUser() != null) {
                     startActivity(new Intent(this, RankingActivity.class));
                 } else {
-                    Toast.makeText(this, "You need to login!", Toast.LENGTH_SHORT).show();
+                    login();
                 }
                 break;
-            case R.id.tvAccount:
-                if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    login();
-                } else {
-                    startActivity(new Intent(this, AccountActivity.class));
-                }
         }
     }
 
@@ -112,6 +105,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 if (documentSnapshot.exists()) {
                                     dialog.dismiss();
+                                    startActivity(new Intent(getApplicationContext(), RankingActivity.class));
                                     Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Map<String, Object> data = new HashMap<>();
@@ -128,6 +122,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             dialog.dismiss();
+                                            startActivity(new Intent(getApplicationContext(), RankingActivity.class));
                                             Toast.makeText(getApplicationContext(), "Login success!", Toast.LENGTH_SHORT).show();
                                         }
                                     });
@@ -137,7 +132,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     }
                 });
             } catch (ApiException e) {
-                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         }
     }

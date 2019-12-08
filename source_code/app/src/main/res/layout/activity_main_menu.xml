@@ -18,36 +18,42 @@
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvPlay"
-            android:textColor="@color/colorWhite"
+        <ImageView
+            android:id="@+id/imageViewPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/play_button_name"
-            android:textSize="40sp"
-            android:textStyle="bold"
+            android:src="@drawable/play_normal"
             android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:layout_marginTop="20dp"
-            android:id="@+id/tvRank"
-            android:textColor="@color/colorWhite"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/rank_button_name"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal" />
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp">
 
-        <TextView
-            android:layout_marginTop="20dp"
-            android:id="@+id/tvAccount"
-            android:textColor="@color/colorWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/account_button_name"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal" />
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/tvRank"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rank_button_name"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/tvTutorial"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TUTORIAL"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

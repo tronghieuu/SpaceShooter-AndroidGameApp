@@ -45,25 +45,19 @@
             android:layout_gravity="center"
             android:layout_marginTop="40dp">
 
-            <TextView
-                android:id="@+id/tvMenu"
+            <ImageView
+                android:id="@+id/imageViewMenu"
                 android:layout_marginRight="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MENU"
-                android:textColor="@color/colorWhite"
-                android:textStyle="bold"
-                android:textSize="30dp" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/home_pressed" />
 
-            <TextView
-                android:id="@+id/tvReplay"
+            <ImageView
+                android:id="@+id/imageViewReplay"
                 android:layout_marginLeft="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="REPLAY"
-                android:textColor="@color/colorWhite"
-                android:textStyle="bold"
-                android:textSize="30dp" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/resume_normal"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
