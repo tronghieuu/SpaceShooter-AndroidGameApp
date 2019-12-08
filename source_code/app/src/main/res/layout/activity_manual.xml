@@ -167,7 +167,7 @@
                             android:layout_gravity="center"
                             android:textSize="25dp"
                             android:textColor="@color/colorWhite"
-                            android:text="Dead Master"
+                            android:text="Greeny"
                             android:textStyle="bold" />
                     </LinearLayout>
 
