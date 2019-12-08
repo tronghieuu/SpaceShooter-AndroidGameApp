@@ -180,8 +180,11 @@ public class GameView extends SurfaceView implements Runnable {
                     }
 
                     if(spaceShip.CircleCollisionDetect(rock.radius,rock.x,rock.y))  {
-                        rock.x = - 500;
-                        spaceShipGotShot();
+                        if(spaceShip.timeImmortal == 0) {
+                            rock.x = - 500;
+                            spaceShipGotShot();
+                            spaceShip.setImmortal();
+                        }
                     }
                 }
             }
@@ -191,8 +194,11 @@ public class GameView extends SurfaceView implements Runnable {
         for(BossBullet bossBullet : bossBullets) {
             if (bossBullet.isVisible()) {
                 if (spaceShip.CircleCollisionDetect(bossBullet.radius,bossBullet.x,bossBullet.y)) {
-                    bossBullet.x = -500;
-                    spaceShipGotShot();
+                    if(spaceShip.timeImmortal == 0) {
+                        bossBullet.x = -500;
+                        spaceShipGotShot();
+                        spaceShip.setImmortal();
+                    }
                 }
             }
         }
@@ -220,7 +226,10 @@ public class GameView extends SurfaceView implements Runnable {
 
                 }
                 if (boss.CircleCollisionDetect(spaceShip.radius, spaceShip.x, spaceShip.y)) {
-                    spaceShipGotShot();
+                    if(spaceShip.timeImmortal == 0) {
+                        spaceShipGotShot();
+                        spaceShip.setImmortal();
+                    }
                 }
 
                 //BOSS SHOOTING

@@ -321,6 +321,46 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="25dp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="20dp">
+
+                    <LinearLayout
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/heart"
+                            android:layout_gravity="center"
+                            android:paddingHorizontal="10dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="25dp"
+                            android:textColor="@color/colorWhite"
+                            android:text="Heart"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="center"
+                        android:text="A great item will fill all your heart containers."
+                        android:textColor="@color/colorWhite"
+                        android:textSize="25dp" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 

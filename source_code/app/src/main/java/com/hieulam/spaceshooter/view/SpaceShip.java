@@ -12,9 +12,10 @@ import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 
 public class SpaceShip {
 
-    int width, height, spaceShipFrame = 0;
+    int width, height, spaceShipFrame = 0, timeImmortal = 0;
+    boolean hide = false;
     float x, y, radius;
-    Bitmap spaceShip1, spaceShip2, spaceShip3, spaceShip4, spaceShip5, spaceShip6, spaceShip7, spaceShip8;
+    Bitmap spaceShip1, spaceShip2, spaceShip3, spaceShip4, spaceShip5, spaceShip6, spaceShip7, spaceShip8, hideMode;
 
     SpaceShip(int screenX, int screenY, Resources res) {
         spaceShip1 = BitmapFactory.decodeResource(res, R.drawable.spaceship1);
@@ -25,6 +26,7 @@ public class SpaceShip {
         spaceShip6 = BitmapFactory.decodeResource(res, R.drawable.spaceship6);
         spaceShip7 = BitmapFactory.decodeResource(res, R.drawable.spaceship7);
         spaceShip8 = BitmapFactory.decodeResource(res, R.drawable.spaceship8);
+        hideMode = BitmapFactory.decodeResource(res, R.drawable.spaceship8);
 
         width = spaceShip1.getWidth();
         height = spaceShip1.getHeight();
@@ -40,6 +42,7 @@ public class SpaceShip {
         spaceShip6 = Bitmap.createScaledBitmap(spaceShip6, width, height, false);
         spaceShip7 = Bitmap.createScaledBitmap(spaceShip7, width, height, false);
         spaceShip8 = Bitmap.createScaledBitmap(spaceShip8, width, height, false);
+        hideMode = Bitmap.createScaledBitmap(hideMode, 1, 1, false);
 
         x = screenX / 2 - width / 2;
         y = screenY * 4/5 - height / 2;
@@ -48,6 +51,44 @@ public class SpaceShip {
     }
 
     Bitmap getSpaceShip() {
+        if(timeImmortal != 0) {
+            timeImmortal--;
+            if(timeImmortal%5 == 0) {
+                if(hide) {
+                    hide = false;
+            } else {
+                    hide = true;
+                }
+            }
+            if(hide) {
+                switch (spaceShipFrame) {
+                    case 0:
+                        spaceShipFrame++;
+                        return spaceShip1;
+                    case 1:
+                        spaceShipFrame++;
+                        return spaceShip2;
+                    case 2:
+                        spaceShipFrame++;
+                        return spaceShip3;
+                    case 3:
+                        spaceShipFrame++;
+                        return spaceShip4;
+                    case 4:
+                        spaceShipFrame++;
+                        return spaceShip5;
+                    case 5:
+                        spaceShipFrame++;
+                        return spaceShip6;
+                    case 6:
+                        spaceShipFrame++;
+                        return spaceShip7;
+                    case 7:
+                        spaceShipFrame = 0;
+                        return spaceShip8;
+                }
+            } else return hideMode;
+        }
         switch (spaceShipFrame) {
             case 0:
                 spaceShipFrame++;
@@ -88,5 +129,9 @@ public class SpaceShip {
 
     Rect getCollisionShape() {
         return new Rect((int) x, (int) y, (int) (x + width), (int) (y + height));
+    }
+
+    public void setImmortal() {
+        timeImmortal = 200;
     }
 }
