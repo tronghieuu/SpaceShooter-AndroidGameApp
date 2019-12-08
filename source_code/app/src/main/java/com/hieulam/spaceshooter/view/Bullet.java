@@ -14,7 +14,7 @@ import static com.hieulam.spaceshooter.view.GameView.screenRatioY;
 public class Bullet {
 
     int width, height;
-    float x, y, radius;
+    float x, y, a, speedX, speedY, radius;
     Bitmap bullet;
 
     Bullet(Resources res) {
@@ -35,6 +35,17 @@ public class Bullet {
 
     Bitmap getBullet() {
         return bullet;
+    }
+
+    public void moveForward() {
+        x += speedX;
+        y += speedY;
+    }
+
+    public void setBullet(int angle, float bSpeed) {
+        a = angle;
+        speedX = (float) Math.cos(Math.toRadians(angle))*bSpeed;
+        speedY = (float) Math.sin(Math.toRadians(angle))*bSpeed;
     }
 
     Rect getCollisionShape() {
