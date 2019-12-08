@@ -236,11 +236,11 @@ public class GameView extends SurfaceView implements Runnable {
 
                 //BOSS SHOOTING
                 boss.bossShootingTime++;
-                if (boss.bossShootingTime > 50) {
+                if (boss.bossShootingTime > 80) {
                     boss.bossShootingTime = 0;
-                    int bulletCountMax, bulletCount = 1;
-                    if (boss.hp > boss.hp*(60f/100f)) bulletCountMax = 1;
-                    else if (boss.hp > boss.hp*(15f/100f)) bulletCountMax = 3;
+                    int bulletCountMax, bulletCount = 1, tam=100+50*(stage/3);
+                    if (boss.hp > (tam/2)) bulletCountMax = 1;
+                    else if (boss.hp > (tam/4)) bulletCountMax = 3;
                     else bulletCountMax = 5;
                     for (BossBullet bossBullet : bossBullets) {
                         if (!bossBullet.isVisible()) {
@@ -279,7 +279,7 @@ public class GameView extends SurfaceView implements Runnable {
             else {
                 // GENERATE ROCK
                 rockDropTime++;
-                if (rockDropTime > 50) {
+                if (rockDropTime > 40) {
                     rockDropTime = 0;
                     int rockCountMax = (int) (Math.random() * (1+stage) + 1), rockCount = 1;
                     for (Rock rock : rocks) {
@@ -296,7 +296,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         // SHOOTING
         shootingTime++;
-        if(shootingTime > 15) {
+        if(shootingTime > 20) {
             shootingTime = 0;
             int shipBulletCount = 1, angle;
             for(Bullet bullet : bullets) {
@@ -377,10 +377,7 @@ public class GameView extends SurfaceView implements Runnable {
                 count++;
             }
 
-            if(!isPlaying) {
-                canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
-            }
-
+            canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
             canvas.drawBitmap(pause.getPauseButton(), pause.x, pause.y, null);
 
             getHolder().unlockCanvasAndPost(canvas);
@@ -413,7 +410,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void itemGenerate(float x, float y, boolean stage){
         int itemType;
         if (stage)
-            itemType = (int) (Math.random() * (18+30) - 30);
+            itemType = (int) (Math.random() * (16+30) - 30);
         else itemType = (int) (Math.random() * (3) + 15);
         if (itemType<15)
             for (int i=0; i<15; i++) {
@@ -426,6 +423,7 @@ public class GameView extends SurfaceView implements Runnable {
             items.get(itemType).setItem(x, y, 4);
             return;
         }
+        if (!stage)
         for (int i=15; i<18; i++)
             if (!items.get(i).isVisible()) {
                 items.get(i).setItem(x, y, 4);
@@ -460,18 +458,12 @@ public class GameView extends SurfaceView implements Runnable {
                         resume();
                     } else {
                         pause.isPaused = true;
-                        Canvas canvas = getHolder().lockCanvas();
-                        canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
-                        getHolder().unlockCanvasAndPost(canvas);
                         pause();
                     }
                 }
 
-                if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY()))
+                if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
                     MainActivity.soundList.playMusic(getContext(),1);
-
-                if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY()) && !isPlaying) {
-
                     activity.finish();
                 }
                 break;
