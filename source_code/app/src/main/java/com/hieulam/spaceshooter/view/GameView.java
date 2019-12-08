@@ -1,7 +1,6 @@
 package com.hieulam.spaceshooter.view;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,11 +10,8 @@ import android.view.SurfaceView;
 import com.hieulam.spaceshooter.GameOverActivity;
 import com.hieulam.spaceshooter.GamePlayActivity;
 import com.hieulam.spaceshooter.MainActivity;
-import com.hieulam.spaceshooter.R;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -24,6 +20,8 @@ public class GameView extends SurfaceView implements Runnable {
     private List<Boss> bosses;
     private List<BossBullet> bossBullets;
     private List<Item> items;
+    private Pause pause;
+    private Exit exit;
     private Thread thread;
     private boolean isPlaying, isBossesAlive;
     private int screenX, screenY, score = 0, heartNumber = 3, stage = 1, shipBulletCountMax=1;
@@ -100,8 +98,11 @@ public class GameView extends SurfaceView implements Runnable {
         paintScore.setColor(Color.WHITE);
         paintScore.setTextSize(100 * screenRatioY);
 
-        // SOUND
+        // PAUSE BUTTON
+        pause = new Pause(getResources(), screenX, screenY);
 
+        // EXIT BUTTON
+        exit = new Exit(getResources(), screenX, screenY);
 
         // HEART CONTAINER
         hearts = new ArrayList<>();
@@ -179,8 +180,11 @@ public class GameView extends SurfaceView implements Runnable {
                     }
 
                     if(spaceShip.CircleCollisionDetect(rock.radius,rock.x,rock.y))  {
-                        rock.x = - 500;
-                        spaceShipGotShot();
+                        if(spaceShip.timeImmortal == 0) {
+                            rock.x = - 500;
+                            spaceShipGotShot();
+                            spaceShip.setImmortal();
+                        }
                     }
                 }
             }
@@ -190,8 +194,11 @@ public class GameView extends SurfaceView implements Runnable {
         for(BossBullet bossBullet : bossBullets) {
             if (bossBullet.isVisible()) {
                 if (spaceShip.CircleCollisionDetect(bossBullet.radius,bossBullet.x,bossBullet.y)) {
-                    bossBullet.x = -500;
-                    spaceShipGotShot();
+                    if(spaceShip.timeImmortal == 0) {
+                        bossBullet.x = -500;
+                        spaceShipGotShot();
+                        spaceShip.setImmortal();
+                    }
                 }
             }
         }
@@ -219,7 +226,10 @@ public class GameView extends SurfaceView implements Runnable {
 
                 }
                 if (boss.CircleCollisionDetect(spaceShip.radius, spaceShip.x, spaceShip.y)) {
-                    spaceShipGotShot();
+                    if(spaceShip.timeImmortal == 0) {
+                        spaceShipGotShot();
+                        spaceShip.setImmortal();
+                    }
                 }
 
                 //BOSS SHOOTING
@@ -365,6 +375,9 @@ public class GameView extends SurfaceView implements Runnable {
                 count++;
             }
 
+            canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
+            canvas.drawBitmap(pause.getPauseButton(), pause.x, pause.y, null);
+
             getHolder().unlockCanvasAndPost(canvas);
         }
     }
@@ -436,6 +449,18 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 previousTouchX = event.getX();
                 previousTouchY = event.getY();
+                if(pause.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
+                    if(pause.isPaused) {
+                        pause.isPaused = false;
+                        resume();
+                    } else {
+                        pause.isPaused = true;
+                        pause();
+                    }
+                }
+                if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
+                    activity.finish();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 float distanceX = currentTouchX - previousTouchX;
@@ -448,10 +473,12 @@ public class GameView extends SurfaceView implements Runnable {
                 if(spaceShip.y < 0 || spaceShip.y > screenY - spaceShip.height) {
                     spaceShip.y -= distanceY;
                 }
+
                 previousTouchX = currentTouchX;
                 previousTouchY = currentTouchY;
                 break;
         }
+        if(!isPlaying) return false;
         return true;
     }
 }
