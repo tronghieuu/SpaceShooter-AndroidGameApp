@@ -76,10 +76,6 @@ public class Rock {
     }
 
 
-    Rect getCollisionShape() {
-        return new Rect((int) x, (int) y, (int) x + width, (int) y + height);
-    }
-
     boolean isVisible() {
         if(x > - width && x < point.x && y > - height && y < point.y) return true;
         return false;
