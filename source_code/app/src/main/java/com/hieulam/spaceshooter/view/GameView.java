@@ -297,7 +297,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         // SHOOTING
         shootingTime++;
-        if(shootingTime > 20) {
+        if(shootingTime > 12) {
             shootingTime = 0;
             int shipBulletCount = 1, angle;
             for(Bullet bullet : bullets) {
@@ -314,7 +314,7 @@ public class GameView extends SurfaceView implements Runnable {
                     } else if (angle > 360) {
                         angle -= 360;
                     }
-                    bullet.setBullet(angle, 10);
+                    bullet.setBullet(angle, 15);
                     shipBulletCount++;
                     if (shipBulletCount > shipBulletCountMax)
                         break;
