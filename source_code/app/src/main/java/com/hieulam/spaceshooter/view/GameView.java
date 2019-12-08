@@ -24,7 +24,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Exit exit;
     private Thread thread;
     private boolean isPlaying, isBossesAlive;
-    private int screenX, screenY, score = 0, heartNumber = 1, stage = 1, shipBulletCountMax=1;
+    private int screenX, screenY, score = 0, heartNumber = 2, stage = 1, shipBulletCountMax=1;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
@@ -109,6 +109,7 @@ public class GameView extends SurfaceView implements Runnable {
         hearts.add(new Heart(screenX, screenY, getResources()));
         hearts.add(new Heart(screenX, screenY, getResources()));
         hearts.add(new Heart(screenX, screenY, getResources()));
+        hearts.get(1).isLive=true;
         hearts.get(2).isLive=true;
     }
 
@@ -257,7 +258,7 @@ public class GameView extends SurfaceView implements Runnable {
                             } else if (angle > 360) {
                                 angle -= 360;
                             }
-                            bossBullet.setBullet(angle, 3 + (stage/3));
+                            bossBullet.setBullet(angle, 10 + (stage/3));
                             bulletCount++;
                             if (bulletCount > bulletCountMax)
                                 break;
@@ -269,22 +270,22 @@ public class GameView extends SurfaceView implements Runnable {
         if (!isBossesAlive) {
             // BOSS SPAWN COUNTING TIME
             bossTimer++;
-            if (bossTimer>3000) {
+            if (bossTimer>700) {
                 int maxBoss;
                 if (stage<3) maxBoss=stage;
                 else maxBoss=3;
                 for(int b=0;b<maxBoss;b++)
-                    bosses.get(b).spawnBoss(screenX,screenY,stage,2+(stage/3), 100+50*(stage/3));
+                    bosses.get(b).spawnBoss(screenX,screenY,stage,4+(stage/3), 50+25*(stage/3));
             }
             else {
                 // GENERATE ROCK
                 rockDropTime++;
-                if (rockDropTime > 40) {
+                if (rockDropTime > 35) {
                     rockDropTime = 0;
                     int rockCountMax = (int) (Math.random() * (1+stage) + 1), rockCount = 1;
                     for (Rock rock : rocks) {
                         if (!rock.isVisible()) {
-                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 5+stage,1*stage);
+                            rock.setRock((float) (Math.random() * (screenX - rock.width)) + 1, -rock.height + 1, 10+stage,1*stage);
                             rockCount++;
                             if (rockCount > rockCountMax)
                                 break;
@@ -441,6 +442,7 @@ public class GameView extends SurfaceView implements Runnable {
             return;
         }
         heartNumber--;
+        if (shipBulletCountMax>1) shipBulletCountMax--;
         hearts.get(2 - heartNumber).isLive = false;
     }
 
