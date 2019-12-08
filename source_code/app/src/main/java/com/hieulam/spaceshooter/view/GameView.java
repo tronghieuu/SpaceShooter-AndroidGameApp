@@ -461,6 +461,7 @@ public class GameView extends SurfaceView implements Runnable {
                         pause();
                     }
                 }
+
                 if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
                     MainActivity.soundList.playMusic(getContext(),1);
                     activity.finish();
