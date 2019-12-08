@@ -77,7 +77,7 @@
                         android:layout_weight="1"
                         android:layout_marginHorizontal="10dp"
                         android:layout_gravity="center"
-                        android:text="Your mission is to survice. Don't let enemy hit you in the marked red area."
+                        android:text="Your mission is to survive. Don't let enemy hit you in the red marked area."
                         android:textColor="@color/colorWhite"
                         android:textSize="25dp" />
                 </LinearLayout>
@@ -177,7 +177,7 @@
                         android:layout_weight="1"
                         android:layout_marginHorizontal="10dp"
                         android:layout_gravity="center"
-                        android:text="The most dangerous enemy in game with ability to fire bullet. The number of bullet will increase when it's life force reach some points. Hard to target due to unpredicted move."
+                        android:text="The most dangerous enemy in game with ability to fire bullet. The number of bullet will increase when it's life force reach some points. Hard to target due to unpredictable move."
                         android:textColor="@color/colorWhite"
                         android:textSize="25dp" />
                 </LinearLayout>
