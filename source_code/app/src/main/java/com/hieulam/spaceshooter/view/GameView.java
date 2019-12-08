@@ -377,7 +377,10 @@ public class GameView extends SurfaceView implements Runnable {
                 count++;
             }
 
-            canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
+            if(!isPlaying) {
+                canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
+            }
+
             canvas.drawBitmap(pause.getPauseButton(), pause.x, pause.y, null);
 
             getHolder().unlockCanvasAndPost(canvas);
@@ -458,11 +461,18 @@ public class GameView extends SurfaceView implements Runnable {
                         resume();
                     } else {
                         pause.isPaused = true;
+                        Canvas canvas = getHolder().lockCanvas();
+                        canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
+                        getHolder().unlockCanvasAndPost(canvas);
                         pause();
                     }
                 }
+
                 if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
                     MainActivity.soundList.playMusic(getContext(),1);
+
+                if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY()) && !isPlaying) {
+
                     activity.finish();
                 }
                 break;
