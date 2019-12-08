@@ -21,6 +21,7 @@ public class GameView extends SurfaceView implements Runnable {
     private List<BossBullet> bossBullets;
     private List<Item> items;
     private Pause pause;
+    private Exit exit;
     private Thread thread;
     private boolean isPlaying, isBossesAlive;
     private int screenX, screenY, score = 0, heartNumber = 3, stage = 1, shipBulletCountMax=1;
@@ -99,6 +100,9 @@ public class GameView extends SurfaceView implements Runnable {
 
         // PAUSE BUTTON
         pause = new Pause(getResources(), screenX, screenY);
+
+        // EXIT BUTTON
+        exit = new Exit(getResources(), screenX, screenY);
 
         // HEART CONTAINER
         hearts = new ArrayList<>();
@@ -362,6 +366,7 @@ public class GameView extends SurfaceView implements Runnable {
                 count++;
             }
 
+            canvas.drawBitmap(exit.getExitButton(), exit.x, exit.y, null);
             canvas.drawBitmap(pause.getPauseButton(), pause.x, pause.y, null);
 
             getHolder().unlockCanvasAndPost(canvas);
@@ -443,6 +448,9 @@ public class GameView extends SurfaceView implements Runnable {
                         pause.isPaused = true;
                         pause();
                     }
+                }
+                if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
+                    activity.finish();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
