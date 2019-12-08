@@ -109,7 +109,7 @@ public class GameView extends SurfaceView implements Runnable {
         hearts.add(new Heart(screenX, screenY, getResources()));
         hearts.add(new Heart(screenX, screenY, getResources()));
         hearts.add(new Heart(screenX, screenY, getResources()));
-        hearts.get(0).isLive=true;
+        hearts.get(2).isLive=true;
     }
 
     @Override
@@ -239,8 +239,8 @@ public class GameView extends SurfaceView implements Runnable {
                 if (boss.bossShootingTime > 50) {
                     boss.bossShootingTime = 0;
                     int bulletCountMax, bulletCount = 1;
-                    if (boss.hp > (boss.hp*60)/100f) bulletCountMax = 1;
-                    else if (boss.hp > (boss.hp*15)/100f) bulletCountMax = 3;
+                    if (boss.hp > boss.hp*(60f/100f)) bulletCountMax = 1;
+                    else if (boss.hp > boss.hp*(15f/100f)) bulletCountMax = 3;
                     else bulletCountMax = 5;
                     for (BossBullet bossBullet : bossBullets) {
                         if (!bossBullet.isVisible()) {
