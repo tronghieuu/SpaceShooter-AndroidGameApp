@@ -43,6 +43,7 @@ public class SoundManager extends Activity
        else if (music==3)
             mediaPlayer = MediaPlayer.create(context, R.raw.music_gameover);
         mediaPlayer.start();
+        mediaPlayer.setVolume(0.4f,0.4f);
         mediaPlayer.setLooping(true);
     }
 
