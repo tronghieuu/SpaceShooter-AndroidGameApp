@@ -65,10 +65,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.soundList.pauseMusic();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.soundList.resumeMusic();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.imageViewPlay:
-                MainActivity.soundList.stopMusic();
                 startActivity(new Intent(this, GamePlayActivity.class));
                 break;
             case R.id.tvRank:

@@ -24,7 +24,7 @@ public class SoundManager extends Activity
         streamIDs = new int[6];
         sm = new int[6];
         // fill your sounds
-        sm[0] = soundPool.load(mContext, R.raw.rock_shot_divide, 1);
+        sm[0] = soundPool.load(mContext, R.raw.boss_explosion, 2);
         sm[1] = soundPool.load(mContext, R.raw.rock_shot_destroy, 1);
         sm[2] = soundPool.load(mContext, R.raw.ship_explosion, 1);
     }
@@ -34,6 +34,8 @@ public class SoundManager extends Activity
     }
 
     public static void playMusic(Context context, int music) {
+       if (mediaPlayer!=null)
+            mediaPlayer.release();
        if (music==1)
             mediaPlayer = MediaPlayer.create(context, R.raw.music_main_menu);
        else if (music==2)
@@ -44,13 +46,15 @@ public class SoundManager extends Activity
         mediaPlayer.setLooping(true);
     }
 
-    public static void stopMusic() {
-        mediaPlayer.release();
+    public static void pauseMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+        }
     }
 
-    public final void cleanUpIfEnd() {
-        sm = null;
-        soundPool.release();
-        soundPool = null;
+    public static void resumeMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
     }
 }

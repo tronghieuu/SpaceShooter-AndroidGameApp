@@ -14,7 +14,7 @@ public class Heart {
     int width, height;
     float x, y;
     Bitmap heart, heart_grey;
-    boolean isLive = true;
+    boolean isLive = false;
 
     Heart(int screenX, int screenY, Resources res) {
         heart = BitmapFactory.decodeResource(res, R.drawable.heart);

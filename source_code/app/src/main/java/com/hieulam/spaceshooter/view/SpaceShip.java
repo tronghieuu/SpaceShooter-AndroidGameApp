@@ -123,7 +123,7 @@ public class SpaceShip {
         float dy = (y+radius) - (cY+cRadius);
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < radius/2 + cRadius) return true;
+        if (distance < radius/3 + cRadius) return true;
         return false;
     }
 

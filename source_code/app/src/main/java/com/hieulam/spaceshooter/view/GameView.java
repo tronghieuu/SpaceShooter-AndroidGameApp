@@ -24,7 +24,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Exit exit;
     private Thread thread;
     private boolean isPlaying, isBossesAlive;
-    private int screenX, screenY, score = 0, heartNumber = 3, stage = 1, shipBulletCountMax=1;
+    private int screenX, screenY, score = 0, heartNumber = 1, stage = 1, shipBulletCountMax=1;
     private SpaceShip spaceShip;
     public static float screenRatioX, screenRatioY;
     private float currentTouchX, currentTouchY, previousTouchX, previousTouchY, backgroundMove, scoreX, scoreY;
@@ -65,7 +65,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         rocks = new ArrayList<>();
 
-        for(int i = 0; i < 30; i++) {
+        for(int i = 0; i < 50; i++) {
             rocks.add(new Rock(getResources()));
         }
 
@@ -109,6 +109,7 @@ public class GameView extends SurfaceView implements Runnable {
         hearts.add(new Heart(screenX, screenY, getResources()));
         hearts.add(new Heart(screenX, screenY, getResources()));
         hearts.add(new Heart(screenX, screenY, getResources()));
+        hearts.get(0).isLive=true;
     }
 
     @Override
@@ -218,6 +219,7 @@ public class GameView extends SurfaceView implements Runnable {
                                 score += 1000;
                                 bossTimer = 0;
                                 stage++;
+                                MainActivity.soundList.playSound(0);
                             }
                             MainActivity.soundList.playSound(1);
                         }
@@ -434,7 +436,7 @@ public class GameView extends SurfaceView implements Runnable {
             intent.putExtra("high_score", score+"");
             activity.startActivity(intent);
             activity.finish();
-            MainActivity.soundList.stopMusic();
+
             return;
         }
         heartNumber--;
@@ -459,6 +461,7 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                 }
                 if(exit.getCollisionShape().contains((int)event.getX(), (int)event.getY())) {
+                    MainActivity.soundList.playMusic(getContext(),1);
                     activity.finish();
                 }
                 break;

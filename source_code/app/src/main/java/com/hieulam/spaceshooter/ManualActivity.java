@@ -21,4 +21,15 @@ public class ManualActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainActivity.soundList.pauseMusic();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainActivity.soundList.resumeMusic();
+    }
 }

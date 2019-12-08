@@ -28,7 +28,7 @@ public class Item {
         else if (type==2)
             item = BitmapFactory.decodeResource(res, R.drawable.item_diamond);
         else if (type==3)
-            item = BitmapFactory.decodeResource(res, R.drawable.item_heart);
+            item = BitmapFactory.decodeResource(res, R.drawable.item_heart_up);
         else if (type==4)
             item = BitmapFactory.decodeResource(res, R.drawable.item_blueprint);
 
