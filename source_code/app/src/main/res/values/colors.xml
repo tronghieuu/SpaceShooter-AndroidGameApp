@@ -10,4 +10,6 @@
     <color name="colorGrey">#686767</color>
     <color name="colorSilver">#878681</color>
     <color name="colorBronze">#cd7f32</color>
+    <color name="colorGreen">#22AD10</color>
+    <color name="colorBlue">#00BCD4</color>
 </resources>

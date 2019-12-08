@@ -56,6 +56,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         findViewById(R.id.imageViewPlay).setOnClickListener(this);
         findViewById(R.id.tvRank).setOnClickListener(this);
+        findViewById(R.id.tvManual).setOnClickListener(this);
 
         dialog = new Dialog(this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -77,6 +78,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     login();
                 }
                 break;
+            case R.id.tvManual:
+                startActivity(new Intent(this, ManualActivity.class));
         }
     }
 

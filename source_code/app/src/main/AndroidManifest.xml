@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ManualActivity"
+            android:theme="@style/AppTheme.noActionBar" />
+        <activity
             android:name=".RankingActivity"
             android:theme="@style/AppTheme.noActionBar" />
         <activity

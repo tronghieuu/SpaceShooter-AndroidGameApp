@@ -38,7 +38,7 @@ public class GameOverActivity extends AppCompatActivity {
         mTvHighScore = findViewById(R.id.tvHighScore);
         mTvHighScore.setText("SCORE: "+mHighScore);
         MainActivity.soundList.playMusic(getApplicationContext(),3);
-        findViewById(R.id.tvMenu).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.imageViewMenu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity.soundList.stopMusic();
@@ -47,7 +47,7 @@ public class GameOverActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.tvReplay).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.imageViewReplay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity.soundList.stopMusic();
