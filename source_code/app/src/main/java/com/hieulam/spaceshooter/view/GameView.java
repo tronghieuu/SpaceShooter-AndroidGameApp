@@ -262,7 +262,7 @@ public class GameView extends SurfaceView implements Runnable {
                 if (stage<3) maxBoss=stage;
                 else maxBoss=3;
                 for(int b=0;b<maxBoss;b++)
-                    bosses.get(b).spawnBoss(screenX,screenY,1,3, 100+50*(stage/3));
+                    bosses.get(b).spawnBoss(screenX,screenY,stage,2+(stage/3), 100+50*(stage/3));
             }
             else {
                 // GENERATE ROCK
@@ -395,7 +395,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void itemGenerate(float x, float y, boolean stage){
         int itemType;
         if (stage)
-            itemType = (int) (Math.random() * (17+30) - 30);
+            itemType = (int) (Math.random() * (18+30) - 30);
         else itemType = (int) (Math.random() * (3) + 15);
         if (itemType<15)
             for (int i=0; i<15; i++) {
